@@ -213,7 +213,7 @@ public:
 		double rotSpeed = fElapsedTime * ROT_SPEED;
 
 		// move forward if no wall in front of you
-		if (GetKey(olc::Key::W).bHeld)
+		if (GetKey(MOVE_FWD_KEY).bHeld)
 		{
 			if (worldMap[(int)(posX + dirX * moveSpeed)][(int)(posY)] == false)
 			{
@@ -226,7 +226,7 @@ public:
 		}
 
 		// move backward if no wall behind you
-		if (GetKey(olc::Key::S).bHeld)
+		if (GetKey(MOVE_BACK_KEY).bHeld)
 		{
 			if (worldMap[(int)(posX - dirX * moveSpeed)][(int)(posY)] == false)
 			{
@@ -238,8 +238,34 @@ public:
 			}
 		}
 
+		//// strafe right if no wall to your right
+		//if (GetKey(STRAFE_RIGHT_KEY).bHeld)
+		//{
+		//	if (worldMap[(int)(posX + dirY * moveSpeed)][(int)(posY)] == false)
+		//	{
+		//		posX += dirY * moveSpeed;
+		//	}
+		//	if (worldMap[(int)(posX)][(int)(posY - dirX * moveSpeed)] == false)
+		//	{
+		//		posY -= dirX * moveSpeed;
+		//	}
+		//}
+
+		//// strafe left if no wall to your left
+		//if (GetKey(STRAFE_LEFT_KEY).bHeld)
+		//{
+		//	if (worldMap[(int)(posX - dirY * moveSpeed)][(int)(posY)] == false)
+		//	{
+		//		posX -= dirY * moveSpeed;
+		//	}
+		//	if (worldMap[(int)(posX)][(int)(posY + dirX * moveSpeed)] == false)
+		//	{
+		//		posY += dirX * moveSpeed;
+		//	}
+		//}
+
 		// rotate to the right
-		if (GetKey(olc::Key::D).bHeld)
+		if (GetKey(STRAFE_RIGHT_KEY).bHeld)
 		{
 			// both camera direction and camera plane must be rotated
 			double oldDirX = dirX;
@@ -251,7 +277,7 @@ public:
 		}
 
 		// rotate to the left
-		if (GetKey(olc::Key::A).bHeld)
+		if (GetKey(STRAFE_LEFT_KEY).bHeld)
 		{
 			// both camera direction and camera plane must be rotated
 			double oldDirX = dirX;
