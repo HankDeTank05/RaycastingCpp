@@ -3,6 +3,7 @@
 #include "olcPixelGameEngine.h"
 
 #include "Variables.h"
+#include <vector>
 
 class Raycasting : public olc::PixelGameEngine
 {
@@ -14,38 +15,38 @@ public:
 
 private:
 	int worldMap[MAP_WIDTH][MAP_HEIGHT] = {
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-			{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-			{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+		{4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,7,7,7,7,7,7,7,7},
+		{4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
+		{4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
+		{4,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
+		{4,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
+		{4,0,4,0,0,0,0,5,5,5,5,5,5,5,5,5,7,7,0,7,7,7,7,7},
+		{4,0,5,0,0,0,0,5,0,5,0,5,0,5,0,5,7,0,0,0,7,7,7,1},
+		{4,0,6,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
+		{4,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,1},
+		{4,0,8,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
+		{4,0,0,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,7,7,7,1},
+		{4,0,0,0,0,0,0,5,5,5,5,0,5,5,5,5,7,7,7,7,7,7,7,1},
+		{6,6,6,6,6,6,6,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
+		{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
+		{6,6,6,6,6,6,0,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
+		{4,4,4,4,4,4,0,4,4,4,6,0,6,2,2,2,2,2,2,2,3,3,3,3},
+		{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+		{4,0,0,0,0,0,0,0,0,0,0,0,6,2,0,0,5,0,0,2,0,0,0,2},
+		{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
+		{4,0,6,0,6,0,0,0,0,4,6,0,0,0,0,0,5,0,0,0,0,0,0,2},
+		{4,0,0,5,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
+		{4,0,6,0,6,0,0,0,0,4,6,0,6,2,0,0,5,0,0,2,0,0,0,2},
+		{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+		{4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
 	};
 
 	double posX, posY; // x and y start position
 	double dirX, dirY; // initial direction vector
 	double planeX, planeY; // the 2d raycaster version of camera plane
 
-	double time; // time of current frame
-	double oldTime; // time of previous frame
+	//uint32_t buffer[SCREEN_HEIGHT][SCREEN_WIDTH]; // y-coordinate first because it works per scanline
+	uint32_t texture[NUM_TEXTURES][TEX_WIDTH * TEX_HEIGHT];
 
 public:
 	bool OnUserCreate() override
@@ -53,13 +54,37 @@ public:
 		// called once at the start, so create things here
 
 		// x and y start position
-		posX = 22; posY = 12;
+		posX = 22; posY = 11.5;
 
 		// initial direction vector
 		dirX = -1; dirY = 0;
 
 		// the 2d raycaster version of a camera plane
 		planeX = 0; planeY = 0.66;
+
+		for (int i = 0; i < NUM_TEXTURES; i++)
+		{
+			//texture[i].resize(TEX_WIDTH * TEX_HEIGHT);
+		}
+
+		for (int x = 0; x < TEX_WIDTH; x++)
+		{
+			for (int y = 0; y < TEX_HEIGHT; y++)
+			{
+				int xorcolor = (x * 256 / TEX_WIDTH) ^ (y * 256 / TEX_HEIGHT);
+				//int xcolor = x * 256 / TEX_WIDTH;
+				int ycolor = y * 256 / TEX_HEIGHT;
+				int xycolor = y * 128 / TEX_HEIGHT + x * 128 / TEX_WIDTH;
+				texture[0][TEX_WIDTH * y + x] = 65536 * 254 * (x != y && x != TEX_WIDTH - y); // flat red texture with black cross
+				texture[1][TEX_WIDTH * y + x] = xycolor + 256 * xycolor + 65536 * xycolor; // sloped greyscale
+				texture[2][TEX_WIDTH * y + x] = 256 * xycolor + 65536 * xycolor; // sloped yellow gradient
+				texture[3][TEX_WIDTH * y + x] = xorcolor + 256 * xorcolor + 65536 * xycolor; // xor greyscale
+				texture[4][TEX_WIDTH * y + x] = 256 * xorcolor; // xor green
+				texture[5][TEX_WIDTH * y + x] = 65536 * 192 * (x % 16 && y % 16); // red bricks
+				texture[6][TEX_WIDTH * y + x] = 65536 * ycolor; // red gradient
+				texture[7][TEX_WIDTH * y + x] = 128 + 256 * 128 + 65536 * 128; // flat grey texture
+			}
+		}
 
 		return true;
 	}
@@ -171,41 +196,104 @@ public:
 				drawEnd = SCREEN_HEIGHT - 1;
 			}
 
-			// choose wall color
-			olc::Pixel color;
-			switch (worldMap[mapX][mapY])
+			// texturing calculations
+			int texNum = worldMap[mapX][mapY] - 1; // 1 subtracted from it so texture 0 can be used!
+
+			// calculate the value of wallX
+			double wallX; // where exactly the wall was hit
+			if (side == 0)
 			{
-			case 1:
-				color = olc::RED;
-				break;
-			case 2:
-				color = olc::GREEN;
-				break;
-			case 3:
-				color = olc::BLUE;
-				break;
-			case 4:
-				color = olc::WHITE;
-				break;
-			default:
-				color = olc::YELLOW;
-				break;
+				wallX = posY + perpWallDist * rayDirY;
+			}
+			else
+			{
+				wallX = posX + perpWallDist * rayDirX;
+			}
+			wallX -= floor(wallX);
+			
+			// x-coordinate on the texture
+			int texX = (int)(wallX * (double)(TEX_WIDTH));
+			//if (side == 0 && rayDirX > 0)
+			//{
+			//	texX = TEX_WIDTH - texX - 1;
+			//}
+			//if (side == 0 && rayDirY < 0)
+			//{
+			//	texX = TEX_WIDTH - texX - 1;
+			//}
+			texX = TEX_WIDTH - texX - 1;
+
+			// how much to increase the texture coordinate per screen pixel
+			double step = 1.0 * TEX_HEIGHT / lineHeight;
+			
+			// starting texture coordinate
+			double texPos = (drawStart - SCREEN_HEIGHT / 2.0 + lineHeight / 2.0) * step;
+			for (int y = drawStart; y < drawEnd; y++)
+			{
+				// cast the texture coordinate to integer and mask it with (TEX_HEIGHT - 1) in case of overflow
+				int texY = (int)(texPos) & (TEX_HEIGHT - 1);
+				texPos += step;
+				uint32_t color = texture[texNum][TEX_HEIGHT * texY + texX];
+
+				// make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+				if (side == 1)
+				{
+					color = (color >> 1) & 0x7F7F7F;
+				}
+
+				// convert from RRGGBB to AABBGGRR (for olcPixelGameEngine)
+				uint32_t red = color & 0x00FF0000;
+				uint32_t grn = color & 0x0000FF00;
+				uint32_t blu = color & 0x000000FF;
+
+				red = red >> 16;
+				blu = blu << 16;
+
+				color = blu | grn | red;
+
+				color = color | 0xFF000000;
+
+				olc::Pixel px = olc::Pixel(color);
+
+				//buffer[y][x] = color;
+				Draw(x, y, px);
 			}
 
-			// give x and y sides different brightness
-			if (side == 1)
-			{
-				color = color / 2;
-			}
+			//// choose wall color
+			//olc::Pixel color;
+			//switch (worldMap[mapX][mapY])
+			//{
+			//case 1:
+			//	color = olc::RED;
+			//	break;
+			//case 2:
+			//	color = olc::GREEN;
+			//	break;
+			//case 3:
+			//	color = olc::BLUE;
+			//	break;
+			//case 4:
+			//	color = olc::WHITE;
+			//	break;
+			//default:
+			//	color = olc::YELLOW;
+			//	break;
+			//}
 
-			// draw the pixels of the stripe as a vertical line
-			DrawLine(x, drawStart, x, drawEnd, color);
+			//// give x and y sides different brightness
+			//if (side == 1)
+			//{
+			//	color = color / 2;
+			//}
+
+			//// draw the pixels of the stripe as a vertical line
+			//DrawLine(x, drawStart, x, drawEnd, color);
 		}
 
 		// timing for input and fps counter
-		oldTime = time;
-		time = fElapsedTime;
-		double frameTime = (time - oldTime);
+		//oldTime = time;
+		//time = fElapsedTime;
+		//double frameTime = (time - oldTime);
 		//Clear(olc::BLACK);
 
 		// speed modifiers
