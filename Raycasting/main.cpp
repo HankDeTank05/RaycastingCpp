@@ -131,12 +131,12 @@ public:
 
 				// floor
 				color = texture[FLOOR_TEXTURE].GetPixel(tx, ty);
-				//color.n = (color.n >> 1) & 8355711; // make a bit darker
+				color = color / 2; // make a bit darker
 				Draw(x, y, color);
 
 				// ceiling (symmetrical, at SCREEN_HEIGHT - y - 1 instead of y)
 				color = texture[CEILING_TEXTURE].GetPixel(tx, ty);
-				//color.n = (color.n >> 1) & 8355711; // make a bit darker
+				color = color / 2; // make a bit darker
 				Draw(x, SCREEN_HEIGHT - y - 1, color);
 			}
 		}
