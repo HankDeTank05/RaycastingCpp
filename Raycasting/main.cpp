@@ -224,64 +224,13 @@ public:
 				// make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
 				if (side == 1)
 				{
-					//color = (color >> 1) & 0x7F7F7F;
 					color = color / 2;
 				}
-
-				// convert from RRGGBB to AABBGGRR (for olcPixelGameEngine)
-				//uint32_t red = color & 0x00FF0000;
-				//uint32_t grn = color & 0x0000FF00;
-				//uint32_t blu = color & 0x000000FF;
-
-				//red = red >> 16;
-				//blu = blu << 16;
-
-				//color = blu | grn | red;
-
-				//color = color | 0xFF000000;
-
-				//olc::Pixel px = olc::Pixel(color);
 
 				//buffer[y][x] = color;
 				Draw(x, y, color);
 			}
-
-			//// choose wall color
-			//olc::Pixel color;
-			//switch (worldMap[mapX][mapY])
-			//{
-			//case 1:
-			//	color = olc::RED;
-			//	break;
-			//case 2:
-			//	color = olc::GREEN;
-			//	break;
-			//case 3:
-			//	color = olc::BLUE;
-			//	break;
-			//case 4:
-			//	color = olc::WHITE;
-			//	break;
-			//default:
-			//	color = olc::YELLOW;
-			//	break;
-			//}
-
-			//// give x and y sides different brightness
-			//if (side == 1)
-			//{
-			//	color = color / 2;
-			//}
-
-			//// draw the pixels of the stripe as a vertical line
-			//DrawLine(x, drawStart, x, drawEnd, color);
 		}
-
-		// timing for input and fps counter
-		//oldTime = time;
-		//time = fElapsedTime;
-		//double frameTime = (time - oldTime);
-		//Clear(olc::BLACK);
 
 		// speed modifiers
 		double moveSpeed = fElapsedTime * MOVE_SPEED;
