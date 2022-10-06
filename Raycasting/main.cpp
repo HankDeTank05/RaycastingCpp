@@ -46,7 +46,7 @@ private:
 	double planeX, planeY; // the 2d raycaster version of camera plane
 
 	//uint32_t buffer[SCREEN_HEIGHT][SCREEN_WIDTH]; // y-coordinate first because it works per scanline
-	uint32_t texture[NUM_TEXTURES][TEX_WIDTH * TEX_HEIGHT];
+	olc::Sprite texture[NUM_TEXTURES];
 
 public:
 	bool OnUserCreate() override
@@ -62,29 +62,15 @@ public:
 		// the 2d raycaster version of a camera plane
 		planeX = 0; planeY = 0.66;
 
-		for (int i = 0; i < NUM_TEXTURES; i++)
-		{
-			//texture[i].resize(TEX_WIDTH * TEX_HEIGHT);
-		}
 
-		for (int x = 0; x < TEX_WIDTH; x++)
-		{
-			for (int y = 0; y < TEX_HEIGHT; y++)
-			{
-				int xorcolor = (x * 256 / TEX_WIDTH) ^ (y * 256 / TEX_HEIGHT);
-				//int xcolor = x * 256 / TEX_WIDTH;
-				int ycolor = y * 256 / TEX_HEIGHT;
-				int xycolor = y * 128 / TEX_HEIGHT + x * 128 / TEX_WIDTH;
-				texture[0][TEX_WIDTH * y + x] = 65536 * 254 * (x != y && x != TEX_WIDTH - y); // flat red texture with black cross
-				texture[1][TEX_WIDTH * y + x] = xycolor + 256 * xycolor + 65536 * xycolor; // sloped greyscale
-				texture[2][TEX_WIDTH * y + x] = 256 * xycolor + 65536 * xycolor; // sloped yellow gradient
-				texture[3][TEX_WIDTH * y + x] = xorcolor + 256 * xorcolor + 65536 * xycolor; // xor greyscale
-				texture[4][TEX_WIDTH * y + x] = 256 * xorcolor; // xor green
-				texture[5][TEX_WIDTH * y + x] = 65536 * 192 * (x % 16 && y % 16); // red bricks
-				texture[6][TEX_WIDTH * y + x] = 65536 * ycolor; // red gradient
-				texture[7][TEX_WIDTH * y + x] = 128 + 256 * 128 + 65536 * 128; // flat grey texture
-			}
-		}
+		texture[0] = olc::Sprite("resources/eagle.png");
+		texture[1] = olc::Sprite("resources/redbrick.png");
+		texture[2] = olc::Sprite("resources/purplestone.png");
+		texture[3] = olc::Sprite("resources/greystone.png");
+		texture[4] = olc::Sprite("resources/bluestone.png");
+		texture[5] = olc::Sprite("resources/mossy.png");
+		texture[6] = olc::Sprite("resources/wood.png");
+		texture[7] = olc::Sprite("resources/colorstone.png");
 
 		return true;
 	}
@@ -213,15 +199,15 @@ public:
 			
 			// x-coordinate on the texture
 			int texX = (int)(wallX * (double)(TEX_WIDTH));
-			//if (side == 0 && rayDirX > 0)
-			//{
-			//	texX = TEX_WIDTH - texX - 1;
-			//}
-			//if (side == 0 && rayDirY < 0)
-			//{
-			//	texX = TEX_WIDTH - texX - 1;
-			//}
-			texX = TEX_WIDTH - texX - 1;
+			if (side == 0 && rayDirX > 0)
+			{
+				texX = TEX_WIDTH - texX - 1;
+			}
+			if (side == 1 && rayDirY < 0)
+			{
+				texX = TEX_WIDTH - texX - 1;
+			}
+			//texX = TEX_WIDTH - texX - 1;
 
 			// how much to increase the texture coordinate per screen pixel
 			double step = 1.0 * TEX_HEIGHT / lineHeight;
@@ -233,30 +219,31 @@ public:
 				// cast the texture coordinate to integer and mask it with (TEX_HEIGHT - 1) in case of overflow
 				int texY = (int)(texPos) & (TEX_HEIGHT - 1);
 				texPos += step;
-				uint32_t color = texture[texNum][TEX_HEIGHT * texY + texX];
+				olc::Pixel color = texture[texNum].GetPixel(texX, texY);
 
 				// make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
 				if (side == 1)
 				{
-					color = (color >> 1) & 0x7F7F7F;
+					//color = (color >> 1) & 0x7F7F7F;
+					color = color / 2;
 				}
 
 				// convert from RRGGBB to AABBGGRR (for olcPixelGameEngine)
-				uint32_t red = color & 0x00FF0000;
-				uint32_t grn = color & 0x0000FF00;
-				uint32_t blu = color & 0x000000FF;
+				//uint32_t red = color & 0x00FF0000;
+				//uint32_t grn = color & 0x0000FF00;
+				//uint32_t blu = color & 0x000000FF;
 
-				red = red >> 16;
-				blu = blu << 16;
+				//red = red >> 16;
+				//blu = blu << 16;
 
-				color = blu | grn | red;
+				//color = blu | grn | red;
 
-				color = color | 0xFF000000;
+				//color = color | 0xFF000000;
 
-				olc::Pixel px = olc::Pixel(color);
+				//olc::Pixel px = olc::Pixel(color);
 
 				//buffer[y][x] = color;
-				Draw(x, y, px);
+				Draw(x, y, color);
 			}
 
 			//// choose wall color
