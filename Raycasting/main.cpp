@@ -15,30 +15,30 @@ public:
 
 private:
 	int worldMap[MAP_WIDTH][MAP_HEIGHT] = {
-		{4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,7,7,7,7,7,7,7,7},
-		{4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
-		{4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
-		{4,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
-		{4,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
-		{4,0,4,0,0,0,0,5,5,5,5,5,5,5,5,5,7,7,0,7,7,7,7,7},
-		{4,0,5,0,0,0,0,5,0,5,0,5,0,5,0,5,7,0,0,0,7,7,7,1},
-		{4,0,6,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
-		{4,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,1},
-		{4,0,8,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
-		{4,0,0,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,7,7,7,1},
-		{4,0,0,0,0,0,0,5,5,5,5,0,5,5,5,5,7,7,7,7,7,7,7,1},
-		{6,6,6,6,6,6,6,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
-		{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
-		{6,6,6,6,6,6,0,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
-		{4,4,4,4,4,4,0,4,4,4,6,0,6,2,2,2,2,2,2,2,3,3,3,3},
-		{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
-		{4,0,0,0,0,0,0,0,0,0,0,0,6,2,0,0,5,0,0,2,0,0,0,2},
-		{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
-		{4,0,6,0,6,0,0,0,0,4,6,0,0,0,0,0,5,0,0,0,0,0,0,2},
-		{4,0,0,5,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
-		{4,0,6,0,6,0,0,0,0,4,6,0,6,2,0,0,5,0,0,2,0,0,0,2},
-		{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
-		{4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
+		{8,8,8,8,8,8,8,8,8,8,8,4,4,6,4,4,6,4,6,4,4,4,6,4},
+		{8,0,0,0,0,0,0,0,0,0,8,4,0,0,0,0,0,0,0,0,0,0,0,4},
+		{8,0,3,3,0,0,0,0,0,8,8,4,0,0,0,0,0,0,0,0,0,0,0,6},
+		{8,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+		{8,0,3,3,0,0,0,0,0,8,8,4,0,0,0,0,0,0,0,0,0,0,0,4},
+		{8,0,0,0,0,0,0,0,0,0,8,4,0,0,0,0,0,6,6,6,0,6,4,6},
+		{8,8,8,8,0,8,8,8,8,8,8,4,4,4,4,4,4,6,0,0,0,0,0,6},
+		{7,7,7,7,0,7,7,7,7,0,8,0,8,0,8,0,8,4,0,4,0,6,0,6},
+		{7,7,0,0,0,0,0,0,7,8,0,8,0,8,0,8,8,6,0,0,0,0,0,6},
+		{7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,0,0,0,0,0,4},
+		{7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,0,6,0,6,0,6},
+		{7,7,0,0,0,0,0,0,7,8,0,8,0,8,0,8,8,6,4,6,0,6,6,6},
+		{7,7,7,7,0,7,7,7,7,8,8,4,0,6,8,4,8,3,3,3,0,3,3,3},
+		{2,2,2,2,0,2,2,2,2,4,6,4,0,0,6,0,6,3,0,0,0,0,0,3},
+		{2,2,0,0,0,0,0,2,2,4,0,0,0,0,0,0,4,3,0,0,0,0,0,3},
+		{2,0,0,0,0,0,0,0,2,4,0,0,0,0,0,0,4,3,0,0,0,0,0,3},
+		{1,0,0,0,0,0,0,0,1,4,4,4,4,4,6,0,6,3,3,0,0,0,3,3},
+		{2,0,0,0,0,0,0,0,2,2,2,1,2,2,2,6,6,0,0,5,0,5,0,5},
+		{2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5},
+		{2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,5,0,5,0,5,0,5,0,5},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5},
+		{2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,5,0,5,0,5,0,5,0,5},
+		{2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5},
+		{2,2,2,2,1,2,2,2,2,2,2,1,2,2,2,5,5,5,5,5,5,5,5,5}
 	};
 
 	double posX, posY; // x and y start position
@@ -80,6 +80,70 @@ public:
 		// called once per frame
 
 		Clear(olc::BLACK);
+
+		  ///////////////////
+		 // FLOOR CASTING //
+		///////////////////
+
+		for (int y = 0; y < SCREEN_HEIGHT; y++)
+		{
+			// rayDir for leftmost ray (x = 0) and rightmost ray (x = SCREEN_WIDTH)
+			float rayDirX0 = dirX - planeX;
+			float rayDirY0 = dirY - planeY;
+			float rayDirX1 = dirX + planeX;
+			float rayDirY1 = dirY + planeY;
+
+			// current y position compared to the center of the screen
+			int p = y - SCREEN_HEIGHT / 2;
+
+			// vertical position of camera
+			float posZ = 0.5 * SCREEN_HEIGHT;
+
+			// horizontal distance from the camera to the floor for the current row
+			// 0.5 is the z position exactly in the middle between the floor and ceiling
+			float rowDistance = posZ / p;
+
+			// calculate the real world step vector we have to add for each x (parallel to camera plane)
+			// adding step by step avoids multiplications with a weight in the inner loop
+			float floorStepX = rowDistance * (rayDirX1 - rayDirX0) / SCREEN_WIDTH;
+			float floorStepY = rowDistance * (rayDirY1 - rayDirY0) / SCREEN_WIDTH;
+
+			// real world coords of the leftmost column
+			// this will be updated as we step to the right
+			float floorX = posX + rowDistance * rayDirX0;
+			float floorY = posY + rowDistance * rayDirY0;
+
+			for (int x = 0; x < SCREEN_WIDTH; x++)
+			{
+				// the cell coord is simply gotten from the integer parts of floorX and floorY
+				int cellX = (int)(floorX);
+				int cellY = (int)(floorY);
+
+				// get the texture coordinate from the fractional part
+				int tx = (int)(TEX_WIDTH * (floorX - cellX)) & (TEX_WIDTH - 1);
+				int ty = (int)(TEX_HEIGHT * (floorY - cellY)) & (TEX_HEIGHT - 1);
+
+				floorX += floorStepX;
+				floorY += floorStepY;
+
+				// choose the texture and draw the pixel
+				olc::Pixel color;
+
+				// floor
+				color = texture[FLOOR_TEXTURE].GetPixel(tx, ty);
+				//color.n = (color.n >> 1) & 8355711; // make a bit darker
+				Draw(x, y, color);
+
+				// ceiling (symmetrical, at SCREEN_HEIGHT - y - 1 instead of y)
+				color = texture[CEILING_TEXTURE].GetPixel(tx, ty);
+				//color.n = (color.n >> 1) & 8355711; // make a bit darker
+				Draw(x, SCREEN_HEIGHT - y - 1, color);
+			}
+		}
+
+		  /////////////////////////////////
+		 // TEXTURED RAYCASTING (WALLS) //
+		/////////////////////////////////
 
 		for (int x = 0; x < SCREEN_WIDTH; x++)
 		{
