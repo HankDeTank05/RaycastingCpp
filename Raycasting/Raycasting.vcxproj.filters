@@ -21,9 +21,21 @@
     <ClInclude Include="olcPixelGameEngine.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="SectorMap.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Raycasting.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BinarySpacePartitioning.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SectorMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
