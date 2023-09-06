@@ -81,8 +81,8 @@ public:
 
 		Clear(olc::BLACK);
 
-		  ///////////////////
-		 // FLOOR CASTING //
+		///////////////////
+		// FLOOR CASTING //
 		///////////////////
 
 		for (int y = 0; y < SCREEN_HEIGHT; y++)
@@ -141,8 +141,8 @@ public:
 			}
 		}
 
-		  /////////////////////////////////
-		 // TEXTURED RAYCASTING (WALLS) //
+		/////////////////////////////////
+		// TEXTURED RAYCASTING (WALLS) //
 		/////////////////////////////////
 
 		for (int x = 0; x < SCREEN_WIDTH; x++)
