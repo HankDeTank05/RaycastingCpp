@@ -7,8 +7,8 @@ const int MAP_WIDTH = 24;
 const int MAP_HEIGHT = 24;
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
-const int SCREEN_SCALE_WIDTH = 1;
-const int SCREEN_SCALE_HEIGHT = 1;
+const int SCREEN_SCALE_WIDTH = 2;
+const int SCREEN_SCALE_HEIGHT = 2;
 
 const double MOVE_SPEED = 5.0;
 const double ROT_SPEED = 3.0;
