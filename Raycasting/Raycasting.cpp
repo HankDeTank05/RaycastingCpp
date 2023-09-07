@@ -135,8 +135,9 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 
 		// calculate ray pos and dir
 		float cameraX = 2.0f * x / static_cast<float>(SCREEN_WIDTH) - 1; // the x-coord in camera space
-		float rayDirX = player.GetDir().GetX() + player.GetPlane().GetX() * cameraX;
-		float rayDirY = player.GetDir().GetY() + player.GetPlane().GetY() * cameraX;
+		Vector3 rayDir(player.GetDir().GetX() + player.GetPlane().GetX() * cameraX,
+						player.GetDir().GetY() + player.GetPlane().GetY() * cameraX,
+						0.0f);
 
 		// which box of the map we're in
 		int mapX = static_cast<int>(player.GetPos().GetX());
@@ -147,8 +148,8 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 		float sideDistY;
 
 		// length of ray from one x- or y-side to next x- or y-side
-		float deltaDistX = (rayDirX == 0) ? 1e30f : std::abs(1 / rayDirX);
-		float deltaDistY = (rayDirY == 0) ? 1e30f : std::abs(1 / rayDirY);
+		float deltaDistX = (rayDir.GetX() == 0) ? 1e30f : std::abs(1 / rayDir.GetX());
+		float deltaDistY = (rayDir.GetY() == 0) ? 1e30f : std::abs(1 / rayDir.GetY());
 		float perpWallDist;
 
 		// what direction to step in x- or y-direction (either +1 or -1)
@@ -159,7 +160,7 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 		int side; // was a NS wall or EW wall hit?
 
 		// calculate step and initial sideDist
-		if (rayDirX < 0)
+		if (rayDir.GetX() < 0)
 		{
 			stepX = -1;
 			sideDistX = (player.GetPos().GetX() - mapX) * deltaDistX;
@@ -170,7 +171,7 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 			sideDistX = (mapX + 1.0f - player.GetPos().GetX()) * deltaDistX;
 		}
 
-		if (rayDirY < 0)
+		if (rayDir.GetY() < 0)
 		{
 			stepY = -1;
 			sideDistY = (player.GetPos().GetY() - mapY) * deltaDistY;
@@ -239,21 +240,21 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 		float wallX; // where exactly the wall was hit
 		if (side == 0)
 		{
-			wallX = player.GetPos().GetY() + perpWallDist * rayDirY;
+			wallX = player.GetPos().GetY() + perpWallDist * rayDir.GetY();
 		}
 		else
 		{
-			wallX = player.GetPos().GetX() + perpWallDist * rayDirX;
+			wallX = player.GetPos().GetX() + perpWallDist * rayDir.GetX();
 		}
 		wallX -= floor(wallX);
 
 		// x-coordinate on the texture
 		int texX = static_cast<int>(wallX * static_cast<float>(TEX_WIDTH));
-		if (side == 0 && rayDirX > 0)
+		if (side == 0 && rayDir.GetX() > 0)
 		{
 			texX = TEX_WIDTH - texX - 1;
 		}
-		if (side == 1 && rayDirY < 0)
+		if (side == 1 && rayDir.GetY() < 0)
 		{
 			texX = TEX_WIDTH - texX - 1;
 		}
@@ -292,17 +293,17 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 			float floorYWall; // y position of the floor texel at the bottom of the wall
 
 			// 4 different wall directions possible
-			if (side == 0 && rayDirX > 0)
+			if (side == 0 && rayDir.GetX() > 0)
 			{
 				floorXWall = static_cast<float>(mapX);
 				floorYWall = mapY + wallX;
 			}
-			else if (side == 0 && rayDirX < 0)
+			else if (side == 0 && rayDir.GetX() < 0)
 			{
 				floorXWall = mapX + 1.0f;
 				floorYWall = mapY + wallX;
 			}
-			else if (side == 1 && rayDirY > 0)
+			else if (side == 1 && rayDir.GetY() > 0)
 			{
 				floorXWall = mapX + wallX;
 				floorYWall = static_cast<float>(mapY);
