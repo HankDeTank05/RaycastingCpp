@@ -32,6 +32,13 @@ Matrix33::Matrix33(Vector3 c0, Vector3 c1, Vector3 c2)
 	m[2][0] = c0.GetZ(); m[2][1] = c1.GetZ(); m[2][2] = c2.GetZ();
 }
 
+Vector3 Matrix33::operator*(const Vector3& v)
+{
+	return Vector3(m[0][0] * v.GetX() + m[0][1] * v.GetY() + m[0][2] * v.GetZ(),
+		m[1][0] * v.GetX() + m[1][1] * v.GetY() + m[1][2] * v.GetZ(),
+		m[2][0] * v.GetX() + m[2][1] * v.GetY() + m[2][2] * v.GetZ());
+}
+
 Vector3 Matrix33::GetCol(int colNum)
 {
 	BoundsCheck(colNum);

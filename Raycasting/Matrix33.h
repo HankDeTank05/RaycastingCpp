@@ -17,6 +17,9 @@ public: // specialized constructors
 		float m20, float m21, float m22);
 	Matrix33(Vector3 c0, Vector3 c1, Vector3 c2);
 
+public: // operators
+	Vector3 operator*(const Vector3& v);
+
 public: // accessors
 	Vector3 GetCol(int colNum);
 	Vector3 GetRow(int rowNum);

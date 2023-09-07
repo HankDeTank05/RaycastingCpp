@@ -2,6 +2,8 @@
 
 #include "Variables.h"
 
+#include "Matrix33.h"
+
 Player::Player(float _posX, float _posY, float _dirX, float _dirY, float _planeX, float _planeY)
 	//: posX(_posX), posY(_posY),
 	//dirX(_dirX), dirY(_dirY),
@@ -105,13 +107,16 @@ void Player::RotateLeft(float fElapsedTime)
 	// speed modifiers
 	float rotSpeed = fElapsedTime * ROT_SPEED;
 
+	float cos = cosf(rotSpeed);
+	float sin = sinf(rotSpeed);
+
+	Matrix33 rotMat(cos, -sin, 0.0f,
+					sin, cos, 0.0f,
+					0.0f, 0.0f, 1.0f);
+
 	// both camera direction and camera plane must be rotated
-	float oldDirX = dir.GetX();
-	dir.SetX(dir.GetX() * cosf(rotSpeed) - dir.GetY() * sinf(rotSpeed));
-	dir.SetY(oldDirX * sinf(rotSpeed) + dir.GetY() * cosf(rotSpeed));
-	float oldPlaneX = plane.GetX();
-	plane.SetX(plane.GetX() * cosf(rotSpeed) - plane.GetY() * sinf(rotSpeed));
-	plane.SetY(oldPlaneX * sinf(rotSpeed) + plane.GetY() * cosf(rotSpeed));
+	dir = rotMat * dir;
+	plane = rotMat * plane;
 }
 
 void Player::RotateRight(float fElapsedTime)
@@ -119,13 +124,16 @@ void Player::RotateRight(float fElapsedTime)
 	// speed modifiers
 	float rotSpeed = fElapsedTime * ROT_SPEED;
 
+	float cos = cosf(-rotSpeed);
+	float sin = sinf(-rotSpeed);
+
+	Matrix33 rotMat(cos, -sin, 0.0f,
+					sin, cos, 0.0f,
+					0.0f, 0.0f, 1.0f);
+
 	// both camera direction and camera plane must be rotated
-	float oldDirX = dir.GetX();
-	dir.SetX(dir.GetX() * cosf(-rotSpeed) - dir.GetY() * sinf(-rotSpeed));
-	dir.SetY(oldDirX * sinf(-rotSpeed) + dir.GetY() * cosf(-rotSpeed));
-	float oldPlaneX = plane.GetX();
-	plane.SetX(plane.GetX() * cosf(-rotSpeed) - plane.GetY() * sinf(-rotSpeed));
-	plane.SetY(oldPlaneX * sinf(-rotSpeed) + plane.GetY() * cosf(-rotSpeed));
+	dir = rotMat * dir;
+	plane = rotMat * plane;
 }
 
 Vector3 Player::GetPos()

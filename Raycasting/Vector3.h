@@ -13,9 +13,9 @@ public: // specialized constructor
 	Vector3(float x, float y, float z);
 
 public: // accessors
-	float GetX();
-	float GetY();
-	float GetZ();
+	float GetX() const;
+	float GetY() const;
+	float GetZ() const;
 
 public: // mutators
 	void SetX(float newX);

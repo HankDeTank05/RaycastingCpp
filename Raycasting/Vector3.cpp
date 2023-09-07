@@ -38,17 +38,17 @@ Vector3::Vector3(float _x, float _y, float _z)
 	// do nothing
 }
 
-float Vector3::GetX()
+float Vector3::GetX() const
 {
 	return x;
 }
 
-float Vector3::GetY()
+float Vector3::GetY() const
 {
 	return y;
 }
 
-float Vector3::GetZ()
+float Vector3::GetZ() const
 {
 	return z;
 }
