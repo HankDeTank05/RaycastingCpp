@@ -36,6 +36,12 @@
     <ClInclude Include="Player.h">
       <Filter>Source Files\Raycasting Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix22.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -49,6 +55,12 @@
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files\Raycasting Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix22.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
