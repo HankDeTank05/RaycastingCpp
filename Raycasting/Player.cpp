@@ -3,9 +3,12 @@
 #include "Variables.h"
 
 Player::Player(float _posX, float _posY, float _dirX, float _dirY, float _planeX, float _planeY)
-	: posX(_posX), posY(_posY),
-	dirX(_dirX), dirY(_dirY),
-	planeX(_planeX), planeY(_planeY),
+	//: posX(_posX), posY(_posY),
+	//dirX(_dirX), dirY(_dirY),
+	//planeX(_planeX), planeY(_planeY),
+	: pos(_posX, _posY, 1.0f),
+	dir(_dirX, _dirY, 0.0f),
+	plane(_planeX, _planeY, 0.0f),
 	moveSpeed(MOVE_SPEED),
 	rotSpeed(ROT_SPEED)
 
@@ -15,9 +18,12 @@ Player::Player(float _posX, float _posY, float _dirX, float _dirY, float _planeX
 
 Player& Player::operator=(const Player& p)
 {
-	posX = p.posX; posY = p.posY;
-	dirX = p.dirX; dirY = p.dirY;
-	planeX = p.planeX; planeY = p.planeY;
+	//posX = p.posX; posY = p.posY;
+	//dirX = p.dirX; dirY = p.dirY;
+	//planeX = p.planeX; planeY = p.planeY;
+	pos = p.pos;
+	dir = p.dir;
+	plane = p.plane;
 
 	moveSpeed = p.moveSpeed;
 	rotSpeed = p.rotSpeed;
@@ -36,13 +42,13 @@ void Player::MoveForward(float fElapsedTime)
 	float moveSpeed = fElapsedTime * MOVE_SPEED;
 	
 	// TODO: replace constant map with map ref
-	if (WORLD_2[static_cast<int>(posX + dirX * moveSpeed)][static_cast<int>(posY)] == false)
+	if (WORLD_2[static_cast<int>(pos.GetX() + dir.GetX() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
 	{
-		posX += dirX * moveSpeed;
+		pos.SetX(pos.GetX() + dir.GetX() * moveSpeed);
 	}
-	if (WORLD_2[static_cast<int>(posX)][static_cast<int>(posY + dirY * moveSpeed)] == false)
+	if (WORLD_2[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() + dir.GetY() * moveSpeed)] == false)
 	{
-		posY += dirY * moveSpeed;
+		pos.SetY(pos.GetY() + dir.GetY() * moveSpeed);
 	}
 }
 
@@ -52,13 +58,13 @@ void Player::MoveBackward(float fElapsedTime)
 	float moveSpeed = fElapsedTime * MOVE_SPEED;
 
 	// TODO: replace constant map with map ref
-	if (WORLD_2[static_cast<int>(posX - dirX * moveSpeed)][static_cast<int>(posY)] == false)
+	if (WORLD_2[static_cast<int>(pos.GetX() - dir.GetX() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
 	{
-		posX -= dirX * moveSpeed;
+		pos.SetX(pos.GetX() - dir.GetX() * moveSpeed);
 	}
-	if (WORLD_2[static_cast<int>(posX)][static_cast<int>(posY - dirY * moveSpeed)] == false)
+	if (WORLD_2[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() - dir.GetY() * moveSpeed)] == false)
 	{
-		posY -= dirY * moveSpeed;
+		pos.SetY(pos.GetY() - dir.GetY() * moveSpeed);
 	}
 }
 
@@ -68,13 +74,13 @@ void Player::StrafeLeft(float fElapsedTime)
 	float moveSpeed = fElapsedTime * MOVE_SPEED;
 
 	// TODO: replace constant map with map ref
-	if (WORLD_2[static_cast<int>(posX - dirY * moveSpeed)][static_cast<int>(posY)] == false)
+	if (WORLD_2[static_cast<int>(pos.GetX() - dir.GetY() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
 	{
-		posX -= dirY * moveSpeed;
+		pos.SetX(pos.GetX() - dir.GetY() * moveSpeed);
 	}
-	if (WORLD_2[static_cast<int>(posX)][static_cast<int>(posY + dirX * moveSpeed)] == false)
+	if (WORLD_2[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() + dir.GetX() * moveSpeed)] == false)
 	{
-		posY += dirX * moveSpeed;
+		pos.SetY(pos.GetY() + dir.GetX() * moveSpeed);
 	}
 }
 
@@ -84,13 +90,13 @@ void Player::StrafeRight(float fElapsedTime)
 	float moveSpeed = fElapsedTime * MOVE_SPEED;
 
 	// TODO: replace constant map with map ref
-	if (WORLD_2[static_cast<int>(posX + dirY * moveSpeed)][static_cast<int>(posY)] == false)
+	if (WORLD_2[static_cast<int>(pos.GetX() + dir.GetY() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
 	{
-		posX += dirY * moveSpeed;
+		pos.SetX(pos.GetX() + dir.GetY() * moveSpeed);
 	}
-	if (WORLD_2[static_cast<int>(posX)][static_cast<int>(posY - dirX * moveSpeed)] == false)
+	if (WORLD_2[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() - dir.GetX() * moveSpeed)] == false)
 	{
-		posY -= dirX * moveSpeed;
+		pos.SetY(pos.GetY() - dir.GetX() * moveSpeed);
 	}
 }
 
@@ -100,12 +106,12 @@ void Player::RotateLeft(float fElapsedTime)
 	float rotSpeed = fElapsedTime * ROT_SPEED;
 
 	// both camera direction and camera plane must be rotated
-	float oldDirX = dirX;
-	dirX = dirX * cosf(rotSpeed) - dirY * sinf(rotSpeed);
-	dirY = oldDirX * sinf(rotSpeed) + dirY * cosf(rotSpeed);
-	float oldPlaneX = planeX;
-	planeX = planeX * cosf(rotSpeed) - planeY * sinf(rotSpeed);
-	planeY = oldPlaneX * sinf(rotSpeed) + planeY * cosf(rotSpeed);
+	float oldDirX = dir.GetX();
+	dir.SetX(dir.GetX() * cosf(rotSpeed) - dir.GetY() * sinf(rotSpeed));
+	dir.SetY(oldDirX * sinf(rotSpeed) + dir.GetY() * cosf(rotSpeed));
+	float oldPlaneX = plane.GetX();
+	plane.SetX(plane.GetX() * cosf(rotSpeed) - plane.GetY() * sinf(rotSpeed));
+	plane.SetY(oldPlaneX * sinf(rotSpeed) + plane.GetY() * cosf(rotSpeed));
 }
 
 void Player::RotateRight(float fElapsedTime)
@@ -114,42 +120,42 @@ void Player::RotateRight(float fElapsedTime)
 	float rotSpeed = fElapsedTime * ROT_SPEED;
 
 	// both camera direction and camera plane must be rotated
-	float oldDirX = dirX;
-	dirX = dirX * cosf(-rotSpeed) - dirY * sinf(-rotSpeed);
-	dirY = oldDirX * sinf(-rotSpeed) + dirY * cosf(-rotSpeed);
-	float oldPlaneX = planeX;
-	planeX = planeX * cosf(-rotSpeed) - planeY * sinf(-rotSpeed);
-	planeY = oldPlaneX * sinf(-rotSpeed) + planeY * cosf(-rotSpeed);
+	float oldDirX = dir.GetX();
+	dir.SetX(dir.GetX() * cosf(-rotSpeed) - dir.GetY() * sinf(-rotSpeed));
+	dir.SetY(oldDirX * sinf(-rotSpeed) + dir.GetY() * cosf(-rotSpeed));
+	float oldPlaneX = plane.GetX();
+	plane.SetX(plane.GetX() * cosf(-rotSpeed) - plane.GetY() * sinf(-rotSpeed));
+	plane.SetY(oldPlaneX * sinf(-rotSpeed) + plane.GetY() * cosf(-rotSpeed));
 }
 
 float Player::GetPosX()
 {
-	return posX;
+	return pos.GetX();
 }
 
 float Player::GetPosY()
 {
-	return posY;
+	return pos.GetY();
 }
 
 float Player::GetDirX()
 {
-	return dirX;
+	return dir.GetX();
 }
 
 float Player::GetDirY()
 {
-	return dirY;
+	return dir.GetY();
 }
 
 float Player::GetPlaneX()
 {
-	return planeX;
+	return plane.GetX();
 }
 
 float Player::GetPlaneY()
 {
-	return planeY;
+	return plane.GetY();
 }
 
 float Player::GetMoveSpeed()

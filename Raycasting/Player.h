@@ -1,6 +1,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "Vector3.h"
+
 class Player
 {
 public:
@@ -42,9 +44,12 @@ public:
 	float GetRotSpeed();
 
 private:
-	float posX;	float posY;
-	float dirX; float dirY;
-	float planeX; float planeY; // the 2d raycaster version of a camera plane
+	//float posX;	float posY;
+	Vector3 pos;
+	//float dirX; float dirY;
+	Vector3 dir;
+	//float planeX; float planeY; // the 2d raycaster version of a camera plane
+	Vector3 plane;
 	float moveSpeed;
 	float rotSpeed;
 

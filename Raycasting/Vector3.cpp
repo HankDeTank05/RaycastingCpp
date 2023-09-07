@@ -8,6 +8,23 @@ Vector3::Vector3()
 	// do nothing
 }
 
+Vector3::Vector3(const Vector3& v)
+	: x(v.x),
+	y(v.y),
+	z(v.z)
+{
+	// do nothing
+}
+
+Vector3& Vector3::operator=(const Vector3& v)
+{
+	x = v.x;
+	y = v.y;
+	z = v.z;
+
+	return *this;
+}
+
 Vector3::~Vector3()
 {
 	// do nothing
@@ -34,4 +51,26 @@ float Vector3::GetY()
 float Vector3::GetZ()
 {
 	return z;
+}
+
+void Vector3::SetX(float newX)
+{
+	this->x = newX;
+}
+
+void Vector3::SetY(float newY)
+{
+	this->y = newY;
+}
+
+void Vector3::SetZ(float newZ)
+{
+	this->z = newZ;
+}
+
+void Vector3::Set(float newX, float newY, float newZ)
+{
+	this->SetX(newX);
+	this->SetY(newY);
+	this->SetZ(newZ);
 }

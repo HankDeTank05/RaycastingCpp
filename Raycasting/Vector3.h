@@ -5,18 +5,23 @@ class Vector3
 {
 public:
 	Vector3();
-	Vector3(const Vector3& v) = delete;
-	Vector3& operator=(const Vector3& v) = delete;
+	Vector3(const Vector3& v);
+	Vector3& operator=(const Vector3& v);
 	virtual ~Vector3();
 
-	// specialized constructor
+public: // specialized constructor
 	Vector3(float x, float y, float z);
 
-	// accessors
-
+public: // accessors
 	float GetX();
 	float GetY();
 	float GetZ();
+
+public: // mutators
+	void SetX(float newX);
+	void SetY(float newY);
+	void SetZ(float newZ);
+	void Set(float newX, float newY, float newZ);
 
 private:
 	float x;

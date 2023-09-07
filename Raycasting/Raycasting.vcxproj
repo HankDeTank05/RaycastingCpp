@@ -140,7 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BinarySpacePartitioning.h" />
-    <ClInclude Include="Matrix22.h" />
+    <ClInclude Include="Matrix33.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Raycasting.h" />
@@ -150,7 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Matrix22.cpp" />
+    <ClCompile Include="Matrix33.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Raycasting.cpp" />
     <ClCompile Include="SectorMap.cpp" />
