@@ -128,34 +128,19 @@ void Player::RotateRight(float fElapsedTime)
 	plane.SetY(oldPlaneX * sinf(-rotSpeed) + plane.GetY() * cosf(-rotSpeed));
 }
 
-float Player::GetPosX()
+Vector3 Player::GetPos()
 {
-	return pos.GetX();
+	return pos;
 }
 
-float Player::GetPosY()
+Vector3 Player::GetDir()
 {
-	return pos.GetY();
+	return dir;
 }
 
-float Player::GetDirX()
+Vector3 Player::GetPlane()
 {
-	return dir.GetX();
-}
-
-float Player::GetDirY()
-{
-	return dir.GetY();
-}
-
-float Player::GetPlaneX()
-{
-	return plane.GetX();
-}
-
-float Player::GetPlaneY()
-{
-	return plane.GetY();
+	return plane;
 }
 
 float Player::GetMoveSpeed()

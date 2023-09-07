@@ -29,27 +29,18 @@ public:
 	void RotateLeft(float fElapsedTime);
 	void RotateRight(float fElapsedTime);
 
-	// accessors
-
-	float GetPosX();
-	float GetPosY();
-
-	float GetDirX();
-	float GetDirY();
-
-	float GetPlaneX();
-	float GetPlaneY();
+public: // accessors
+	Vector3 GetPos();
+	Vector3 GetDir();
+	Vector3 GetPlane();
 
 	float GetMoveSpeed();
 	float GetRotSpeed();
 
 private:
-	//float posX;	float posY;
 	Vector3 pos;
-	//float dirX; float dirY;
 	Vector3 dir;
-	//float planeX; float planeY; // the 2d raycaster version of a camera plane
-	Vector3 plane;
+	Vector3 plane; // the 2d raycaster version of a camera plane
 	float moveSpeed;
 	float rotSpeed;
 

@@ -16,6 +16,9 @@
     <Filter Include="Source Files\Raycasting Engine">
       <UniqueIdentifier>{0a1b6606-ef8a-4196-a234-fdd0c66945e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{6bafd594-7dc5-4483-aa65-633734ab5ea2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Variables.h">
@@ -36,11 +39,11 @@
     <ClInclude Include="Player.h">
       <Filter>Source Files\Raycasting Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Matrix33.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -57,10 +60,10 @@
       <Filter>Source Files\Raycasting Engine</Filter>
     </ClCompile>
     <ClCompile Include="Matrix33.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
     <ClCompile Include="Vector3.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

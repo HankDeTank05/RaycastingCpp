@@ -57,10 +57,10 @@ void Raycasting::PaintersFloorCasting()
 	for (int y = 0; y < SCREEN_HEIGHT; y++)
 	{
 		// rayDir for leftmost ray (x = 0) and rightmost ray (x = SCREEN_WIDTH)
-		float rayDirX0 = player.GetDirX() - player.GetPlaneX();
-		float rayDirY0 = player.GetDirY() - player.GetPlaneY();
-		float rayDirX1 = player.GetDirX() + player.GetPlaneX();
-		float rayDirY1 = player.GetDirY() + player.GetPlaneY();
+		float rayDirX0 = player.GetDir().GetX() - player.GetPlane().GetX();
+		float rayDirY0 = player.GetDir().GetY() - player.GetPlane().GetY();
+		float rayDirX1 = player.GetDir().GetX() + player.GetPlane().GetX();
+		float rayDirY1 = player.GetDir().GetY() + player.GetPlane().GetY();
 
 		// current y position compared to the center of the screen
 		int p = y - SCREEN_HEIGHT / 2;
@@ -79,8 +79,8 @@ void Raycasting::PaintersFloorCasting()
 
 		// real world coords of the leftmost column
 		// this will be updated as we step to the right
-		float floorX = player.GetPosX() + rowDistance * rayDirX0;
-		float floorY = player.GetPosY() + rowDistance * rayDirY0;
+		float floorX = player.GetPos().GetX() + rowDistance * rayDirX0;
+		float floorY = player.GetPos().GetY() + rowDistance * rayDirY0;
 
 		for (int x = 0; x < SCREEN_WIDTH; x++)
 		{
@@ -135,12 +135,12 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 
 		// calculate ray pos and dir
 		float cameraX = 2.0f * x / static_cast<float>(SCREEN_WIDTH) - 1; // the x-coord in camera space
-		float rayDirX = player.GetDirX() + player.GetPlaneX() * cameraX;
-		float rayDirY = player.GetDirY() + player.GetPlaneY() * cameraX;
+		float rayDirX = player.GetDir().GetX() + player.GetPlane().GetX() * cameraX;
+		float rayDirY = player.GetDir().GetY() + player.GetPlane().GetY() * cameraX;
 
 		// which box of the map we're in
-		int mapX = static_cast<int>(player.GetPosX());
-		int mapY = static_cast<int>(player.GetPosY());
+		int mapX = static_cast<int>(player.GetPos().GetX());
+		int mapY = static_cast<int>(player.GetPos().GetY());
 
 		// length of ray from current pos to next x- or y-side
 		float sideDistX;
@@ -162,23 +162,23 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 		if (rayDirX < 0)
 		{
 			stepX = -1;
-			sideDistX = (player.GetPosX() - mapX) * deltaDistX;
+			sideDistX = (player.GetPos().GetX() - mapX) * deltaDistX;
 		}
 		else
 		{
 			stepX = 1;
-			sideDistX = (mapX + 1.0f - player.GetPosX()) * deltaDistX;
+			sideDistX = (mapX + 1.0f - player.GetPos().GetX()) * deltaDistX;
 		}
 
 		if (rayDirY < 0)
 		{
 			stepY = -1;
-			sideDistY = (player.GetPosY() - mapY) * deltaDistY;
+			sideDistY = (player.GetPos().GetY() - mapY) * deltaDistY;
 		}
 		else
 		{
 			stepY = 1;
-			sideDistY = (mapY + 1.0f - player.GetPosY()) * deltaDistY;
+			sideDistY = (mapY + 1.0f - player.GetPos().GetY()) * deltaDistY;
 		}
 
 		// perform DDA
@@ -239,11 +239,11 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 		float wallX; // where exactly the wall was hit
 		if (side == 0)
 		{
-			wallX = player.GetPosY() + perpWallDist * rayDirY;
+			wallX = player.GetPos().GetY() + perpWallDist * rayDirY;
 		}
 		else
 		{
-			wallX = player.GetPosX() + perpWallDist * rayDirX;
+			wallX = player.GetPos().GetX() + perpWallDist * rayDirX;
 		}
 		wallX -= floor(wallX);
 
@@ -329,8 +329,8 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 
 				float weight = (currentDist - distPlayer) / (distWall - distPlayer);
 
-				float currentFloorX = weight * floorXWall + (1.0f - weight) * player.GetPosX();
-				float currentFloorY = weight * floorYWall + (1.0f - weight) * player.GetPosY();
+				float currentFloorX = weight * floorXWall + (1.0f - weight) * player.GetPos().GetX();
+				float currentFloorY = weight * floorYWall + (1.0f - weight) * player.GetPos().GetY();
 
 				int floorTexX = static_cast<int>(currentFloorX * TEX_WIDTH) % TEX_WIDTH;
 				int floorTexY = static_cast<int>(currentFloorY * TEX_HEIGHT) % TEX_HEIGHT;
