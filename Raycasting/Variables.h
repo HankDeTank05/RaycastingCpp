@@ -5,13 +5,51 @@
 
 const int MAP_WIDTH = 24;
 const int MAP_HEIGHT = 24;
+
+///////////////////////
+// RENDER RESOLUTION //
+///////////////////////
+
+/* Option 1: CHOOSE WIDTH AND HEIGHT MANUALLY
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
-const int SCREEN_SCALE_WIDTH = 2;
-const int SCREEN_SCALE_HEIGHT = 2;
+//*/
 
-const double MOVE_SPEED = 5.0;
-const double ROT_SPEED = 3.0;
+// -- OR -- //
+
+/* Option 2: CHOOSE WIDTH, AUTO-HEIGHT
+const float ASPECT_WTOH = 3.0f / 4.0f; // 4:3 aspect ratio
+const int SCREEN_WIDTH = 360;
+const int SCREEN_HEIGHT = SCREEN_WIDTH * ASPECT_WTOH;
+//*/
+
+// -- OR -- //
+
+//* Option 3: CHOOSE HEIGHT, AUTO-WIDTH
+const float ASPECT_HTOW = 4.0f / 3.0f; // 4:3 aspect ratio
+const int SCREEN_HEIGHT = 128;
+const int SCREEN_WIDTH = static_cast<int>(SCREEN_HEIGHT * ASPECT_HTOW);
+//*/
+
+//////////////////
+// SCREEN SCALE //
+//////////////////
+
+/* Option 1: CHOOSE X AND Y SCALE MANUALLY
+const int SCREEN_SCALE_WIDTH = 3;
+const int SCREEN_SCALE_HEIGHT = 3;
+//*/
+
+// -- OR -- //
+
+//* Option 2: CHOOSE UNIFORM SCALE FACTOR
+const int SCREEN_UNIFORM_SCALE = 6;
+const int SCREEN_SCALE_WIDTH = SCREEN_UNIFORM_SCALE;
+const int SCREEN_SCALE_HEIGHT = SCREEN_UNIFORM_SCALE;
+//*/
+
+const float MOVE_SPEED = 5.0;
+const float ROT_SPEED = 3.0;
 
 const olc::Key MOVE_FWD_KEY = olc::Key::W;
 const olc::Key MOVE_BACK_KEY = olc::Key::S;

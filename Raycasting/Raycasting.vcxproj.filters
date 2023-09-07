@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Raycasting Engine">
+      <UniqueIdentifier>{0a1b6606-ef8a-4196-a234-fdd0c66945e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Variables.h">
@@ -24,11 +27,14 @@
     <ClInclude Include="SectorMap.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Raycasting.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="BinarySpacePartitioning.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Raycasting.h">
+      <Filter>Source Files\Raycasting Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Source Files\Raycasting Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -37,6 +43,12 @@
     </ClCompile>
     <ClCompile Include="SectorMap.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Raycasting.cpp">
+      <Filter>Source Files\Raycasting Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\Raycasting Engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
