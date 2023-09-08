@@ -140,19 +140,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BinarySpacePartitioning.h" />
+    <ClInclude Include="CellOpen.h" />
+    <ClInclude Include="CellWall.h" />
+    <ClInclude Include="MapCell.h" />
     <ClInclude Include="Matrix33.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Raycasting.h" />
+    <ClInclude Include="RaycastMap.h" />
     <ClInclude Include="SectorMap.h" />
     <ClInclude Include="Variables.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CellOpen.cpp" />
+    <ClCompile Include="CellWall.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapCell.cpp" />
     <ClCompile Include="Matrix33.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Raycasting.cpp" />
+    <ClCompile Include="RaycastMap.cpp" />
     <ClCompile Include="SectorMap.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>

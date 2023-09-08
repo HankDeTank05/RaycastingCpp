@@ -19,6 +19,9 @@
     <Filter Include="Source Files\Math">
       <UniqueIdentifier>{6bafd594-7dc5-4483-aa65-633734ab5ea2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Raycasting Engine\Map Data">
+      <UniqueIdentifier>{225c2213-e3b2-476d-ad69-88ab2284fcb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Variables.h">
@@ -45,6 +48,18 @@
     <ClInclude Include="Vector3.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
+    <ClInclude Include="RaycastMap.h">
+      <Filter>Source Files\Raycasting Engine\Map Data</Filter>
+    </ClInclude>
+    <ClInclude Include="MapCell.h">
+      <Filter>Source Files\Raycasting Engine\Map Data</Filter>
+    </ClInclude>
+    <ClInclude Include="CellWall.h">
+      <Filter>Source Files\Raycasting Engine\Map Data</Filter>
+    </ClInclude>
+    <ClInclude Include="CellOpen.h">
+      <Filter>Source Files\Raycasting Engine\Map Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -64,6 +79,18 @@
     </ClCompile>
     <ClCompile Include="Vector3.cpp">
       <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="MapCell.cpp">
+      <Filter>Source Files\Raycasting Engine\Map Data</Filter>
+    </ClCompile>
+    <ClCompile Include="CellWall.cpp">
+      <Filter>Source Files\Raycasting Engine\Map Data</Filter>
+    </ClCompile>
+    <ClCompile Include="CellOpen.cpp">
+      <Filter>Source Files\Raycasting Engine\Map Data</Filter>
+    </ClCompile>
+    <ClCompile Include="RaycastMap.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

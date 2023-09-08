@@ -13,7 +13,7 @@ public:
 
 	CellWall(int texIndex);
 
-	int GetTexIndex();
+	int GetTexIndex() const;
 
 private:
 	int texIndex;

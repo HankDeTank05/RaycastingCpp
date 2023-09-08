@@ -44,11 +44,11 @@ void Player::MoveForward(float fElapsedTime)
 	float moveSpeed = fElapsedTime * MOVE_SPEED;
 	
 	// TODO: replace constant map with map ref
-	if (WORLD_2[static_cast<int>(pos.GetX() + dir.GetX() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
+	if (WORLD_1[static_cast<int>(pos.GetX() + dir.GetX() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
 	{
 		pos.SetX(pos.GetX() + dir.GetX() * moveSpeed);
 	}
-	if (WORLD_2[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() + dir.GetY() * moveSpeed)] == false)
+	if (WORLD_1[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() + dir.GetY() * moveSpeed)] == false)
 	{
 		pos.SetY(pos.GetY() + dir.GetY() * moveSpeed);
 	}
@@ -60,11 +60,11 @@ void Player::MoveBackward(float fElapsedTime)
 	float moveSpeed = fElapsedTime * MOVE_SPEED;
 
 	// TODO: replace constant map with map ref
-	if (WORLD_2[static_cast<int>(pos.GetX() - dir.GetX() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
+	if (WORLD_1[static_cast<int>(pos.GetX() - dir.GetX() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
 	{
 		pos.SetX(pos.GetX() - dir.GetX() * moveSpeed);
 	}
-	if (WORLD_2[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() - dir.GetY() * moveSpeed)] == false)
+	if (WORLD_1[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() - dir.GetY() * moveSpeed)] == false)
 	{
 		pos.SetY(pos.GetY() - dir.GetY() * moveSpeed);
 	}
@@ -76,11 +76,11 @@ void Player::StrafeLeft(float fElapsedTime)
 	float moveSpeed = fElapsedTime * MOVE_SPEED;
 
 	// TODO: replace constant map with map ref
-	if (WORLD_2[static_cast<int>(pos.GetX() - dir.GetY() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
+	if (WORLD_1[static_cast<int>(pos.GetX() - dir.GetY() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
 	{
 		pos.SetX(pos.GetX() - dir.GetY() * moveSpeed);
 	}
-	if (WORLD_2[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() + dir.GetX() * moveSpeed)] == false)
+	if (WORLD_1[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() + dir.GetX() * moveSpeed)] == false)
 	{
 		pos.SetY(pos.GetY() + dir.GetX() * moveSpeed);
 	}
@@ -92,11 +92,11 @@ void Player::StrafeRight(float fElapsedTime)
 	float moveSpeed = fElapsedTime * MOVE_SPEED;
 
 	// TODO: replace constant map with map ref
-	if (WORLD_2[static_cast<int>(pos.GetX() + dir.GetY() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
+	if (WORLD_1[static_cast<int>(pos.GetX() + dir.GetY() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
 	{
 		pos.SetX(pos.GetX() + dir.GetY() * moveSpeed);
 	}
-	if (WORLD_2[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() - dir.GetX() * moveSpeed)] == false)
+	if (WORLD_1[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() - dir.GetX() * moveSpeed)] == false)
 	{
 		pos.SetY(pos.GetY() - dir.GetX() * moveSpeed);
 	}

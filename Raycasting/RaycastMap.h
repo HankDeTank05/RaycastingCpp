@@ -2,6 +2,7 @@
 #define RAYCAST_MAP_H
 
 #include <vector>
+#include <string>
 
 // forward declarations
 class MapCell;
@@ -17,6 +18,10 @@ public:
 	// ideas
 	//	- read from text file
 	//	- read from excel/csv file
+
+	void LoadMapFromText(std::string levelName);
+
+	MapCell* GetCell(int cellX, int cellY);
 
 private:
 	std::vector<std::vector<MapCell*>> grid;

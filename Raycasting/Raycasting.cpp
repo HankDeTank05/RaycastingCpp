@@ -1,6 +1,10 @@
 #include "Raycasting.h"
 
 #include "Player.h"
+#include "MapCell.h"
+#include "CellWall.h"
+#include "CellOpen.h"
+#include <cassert>
 
 // big four
 
@@ -20,6 +24,8 @@ Raycasting::~Raycasting()
 bool Raycasting::OnUserCreate()
 {
 	// called once at the start, so create things here
+
+	cellMap.LoadMapFromText("world_1");
 
 	texture[0] = olc::Sprite("resources/eagle.png");
 	texture[1] = olc::Sprite("resources/redbrick.png");
@@ -182,6 +188,8 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 			sideDistY = (mapY + 1.0f - player.GetPos().GetY()) * deltaDistY;
 		}
 
+		MapCell* pMapCell = nullptr;
+
 		// perform DDA
 		while (hit == 0)
 		{
@@ -200,7 +208,8 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 			}
 
 			// check if ray hit a wall
-			if (WORLD_2[mapX][mapY] > 0)
+			pMapCell = cellMap.GetCell(mapX, mapY);
+			if (pMapCell->GetCellType() == MapCell::Type::Wall)
 			{
 				hit = 1;
 			}
@@ -234,7 +243,9 @@ void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
 		}
 
 		// texturing calculations
-		int texNum = WORLD_2[mapX][mapY] - 1; // 1 subtracted from it so texture 0 can be used!
+		assert(pMapCell->GetCellType() == MapCell::Type::Wall);
+		CellWall* pWall = static_cast<CellWall*>(pMapCell);
+		int texNum = pWall->GetTexIndex() - 1; // 1 subtracted from it so texture 0 can be used!
 
 		// calculate the value of wallX
 		float wallX; // where exactly the wall was hit

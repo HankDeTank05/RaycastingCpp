@@ -1,5 +1,10 @@
 #include "CellOpen.h"
 
+CellOpen::~CellOpen()
+{
+	// do nothing
+}
+
 CellOpen::CellOpen(int _floorTexIndex, int _ceilingTexIndex)
 	: MapCell(MapCell::Type::Open),
 	floorTexIndex(_floorTexIndex),
