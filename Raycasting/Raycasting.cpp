@@ -45,7 +45,7 @@ bool Raycasting::OnUserUpdate(float fElapsedTime)
 
 	Clear(olc::BLACK);
 
-	TexturedRaycasting(Raycasting::FloorCasting::Vertical);
+	TexturedRaycasting();
 
 	MovePlayer(fElapsedTime);
 
@@ -117,7 +117,7 @@ void Raycasting::PaintersFloorCasting()
 	}
 }
 
-void Raycasting::TexturedRaycasting(Raycasting::FloorCasting algo)
+void Raycasting::TexturedRaycasting()
 {
 	// TODO: replace with strategy pattern
 	if (algo == Raycasting::FloorCasting::Painters)
