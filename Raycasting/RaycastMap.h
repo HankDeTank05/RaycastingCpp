@@ -19,9 +19,12 @@ public:
 	//	- read from text file
 	//	- read from excel/csv file
 
-	void LoadMapFromText(std::string levelName);
+	void LoadMapFromCSV(std::string levelName);
 
 	MapCell* GetCell(int cellX, int cellY);
+
+private: // internal helper functions
+	int ConvertCharToInt(char chr);
 
 private:
 	std::vector<std::vector<MapCell*>> grid;

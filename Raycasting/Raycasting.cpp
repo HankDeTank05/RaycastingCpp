@@ -25,16 +25,16 @@ bool Raycasting::OnUserCreate()
 {
 	// called once at the start, so create things here
 
-	cellMap.LoadMapFromText("world_1");
+	cellMap.LoadMapFromCSV("world_1");
 
-	texture[0] = olc::Sprite("resources/eagle.png");
-	texture[1] = olc::Sprite("resources/redbrick.png");
-	texture[2] = olc::Sprite("resources/purplestone.png");
-	texture[3] = olc::Sprite("resources/greystone.png");
-	texture[4] = olc::Sprite("resources/bluestone.png");
-	texture[5] = olc::Sprite("resources/mossy.png");
-	texture[6] = olc::Sprite("resources/wood.png");
-	texture[7] = olc::Sprite("resources/colorstone.png");
+	texture[0] = olc::Sprite("resources/textures/eagle.png");
+	texture[1] = olc::Sprite("resources/textures/redbrick.png");
+	texture[2] = olc::Sprite("resources/textures/purplestone.png");
+	texture[3] = olc::Sprite("resources/textures/greystone.png");
+	texture[4] = olc::Sprite("resources/textures/bluestone.png");
+	texture[5] = olc::Sprite("resources/textures/mossy.png");
+	texture[6] = olc::Sprite("resources/textures/wood.png");
+	texture[7] = olc::Sprite("resources/textures/colorstone.png");
 
 	return true;
 }
@@ -119,20 +119,6 @@ void Raycasting::PaintersFloorCasting()
 
 void Raycasting::TexturedRaycasting()
 {
-	// TODO: replace with strategy pattern
-	if (algo == Raycasting::FloorCasting::Painters)
-	{
-		PaintersFloorCasting();
-	}
-	else if (algo == Raycasting::FloorCasting::None)
-	{
-		// floor
-		FillRect(0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2, olc::GREY);
-
-		// ceiling
-		FillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT / 2, olc::DARK_GREY);
-	}
-
 	for (int x = 0; x < SCREEN_WIDTH; x++)
 	{
 		/////////////////////////////////
@@ -246,6 +232,7 @@ void Raycasting::TexturedRaycasting()
 		assert(pMapCell->GetCellType() == MapCell::Type::Wall);
 		CellWall* pWall = static_cast<CellWall*>(pMapCell);
 		int texNum = pWall->GetTexIndex() - 1; // 1 subtracted from it so texture 0 can be used!
+		// TODO: fix so you don't have to do -1 at runtime
 
 		// calculate the value of wallX
 		float wallX; // where exactly the wall was hit
@@ -293,69 +280,79 @@ void Raycasting::TexturedRaycasting()
 			Draw(x, y, color);
 		}
 
-		// TODO: replace with strategy pattern
-		if (algo == Raycasting::FloorCasting::Vertical)
+		//////////////////////////////////////
+		// FLOOR CASTING (VERTICAL VERSION) //
+		//////////////////////////////////////
+
+		float floorXWall; // x position of the floor texel at the bottom of the wall
+		float floorYWall; // y position of the floor texel at the bottom of the wall
+
+		// 4 different wall directions possible
+		if (side == 0 && rayDir.GetX() > 0)
 		{
-			//////////////////////////////////////
-			// FLOOR CASTING (VERTICAL VERSION) //
-			//////////////////////////////////////
-
-			float floorXWall; // x position of the floor texel at the bottom of the wall
-			float floorYWall; // y position of the floor texel at the bottom of the wall
-
-			// 4 different wall directions possible
-			if (side == 0 && rayDir.GetX() > 0)
-			{
-				floorXWall = static_cast<float>(mapX);
-				floorYWall = mapY + wallX;
-			}
-			else if (side == 0 && rayDir.GetX() < 0)
-			{
-				floorXWall = mapX + 1.0f;
-				floorYWall = mapY + wallX;
-			}
-			else if (side == 1 && rayDir.GetY() > 0)
-			{
-				floorXWall = mapX + wallX;
-				floorYWall = static_cast<float>(mapY);
-			}
-			else
-			{
-				floorXWall = mapX + wallX;
-				floorYWall = mapY + 1.0f;
-			}
+			floorXWall = static_cast<float>(mapX);
+			floorYWall = mapY + wallX;
+		}
+		else if (side == 0 && rayDir.GetX() < 0)
+		{
+			floorXWall = mapX + 1.0f;
+			floorYWall = mapY + wallX;
+		}
+		else if (side == 1 && rayDir.GetY() > 0)
+		{
+			floorXWall = mapX + wallX;
+			floorYWall = static_cast<float>(mapY);
+		}
+		else
+		{
+			floorXWall = mapX + wallX;
+			floorYWall = mapY + 1.0f;
+		}
 			
-			float distWall = perpWallDist;
-			float distPlayer = 0.0f;
-			float currentDist;
+		float distWall = perpWallDist;
+		float distPlayer = 0.0f;
+		float currentDist;
 
-			if (drawEnd < 0)
+		if (drawEnd < 0)
+		{
+			drawEnd = SCREEN_HEIGHT; // becomes < 0 when the integer overflows
+		}
+
+		// draw the floor from drawEnd to the bottom of the screen
+		for (int y = drawEnd + 1; y < SCREEN_HEIGHT; y++)
+		{
+			currentDist = SCREEN_HEIGHT / (2.0f * y - SCREEN_HEIGHT); // you could make a small lookup table for this instead
+
+			float weight = (currentDist - distPlayer) / (distWall - distPlayer);
+
+			float currentFloorX = weight * floorXWall + (1.0f - weight) * player.GetPos().GetX();
+			float currentFloorY = weight * floorYWall + (1.0f - weight) * player.GetPos().GetY();
+
+			int floorTexX = static_cast<int>(currentFloorX * TEX_WIDTH) % TEX_WIDTH;
+			int floorTexY = static_cast<int>(currentFloorY * TEX_HEIGHT) % TEX_HEIGHT;
+
+			olc::Pixel color;
+
+			pMapCell = cellMap.GetCell(static_cast<int>(currentFloorX), floor(currentFloorY));
+			if (pMapCell->GetCellType() == MapCell::Type::Open)
 			{
-				drawEnd = SCREEN_HEIGHT; // becomes < 0 when the integer overflows
-			}
-
-			// draw the floor from drawEnd to the bottom of the screen
-			for (int y = drawEnd + 1; y < SCREEN_HEIGHT; y++)
-			{
-				currentDist = SCREEN_HEIGHT / (2.0f * y - SCREEN_HEIGHT); // you could make a small lookup table for this instead
-
-				float weight = (currentDist - distPlayer) / (distWall - distPlayer);
-
-				float currentFloorX = weight * floorXWall + (1.0f - weight) * player.GetPos().GetX();
-				float currentFloorY = weight * floorYWall + (1.0f - weight) * player.GetPos().GetY();
-
-				int floorTexX = static_cast<int>(currentFloorX * TEX_WIDTH) % TEX_WIDTH;
-				int floorTexY = static_cast<int>(currentFloorY * TEX_HEIGHT) % TEX_HEIGHT;
-
-				olc::Pixel color;
+				CellOpen* pOpen = static_cast<CellOpen*>(pMapCell);
 
 				// floor
-				color = texture[FLOOR_TEXTURE].GetPixel(floorTexX, floorTexY);
+				int floorTexNum = pOpen->GetFloorTexIndex() - 1;
+				assert(floorTexNum >= 0);
+				//color = texture[FLOOR_TEXTURE].GetPixel(floorTexX, floorTexY);
+				color = texture[pOpen->GetFloorTexIndex() - 1].GetPixel(floorTexX, floorTexY); // TODO: fix so you don't have to do -1 at runtime
 				Draw(x, y, color);
+				//Draw(x, y, olc::CYAN);
 
 				// ceiling (symmetrical)
-				color = texture[CEILING_TEXTURE].GetPixel(floorTexX, floorTexY);
+				int ceilingTexNum = pOpen->GetCeilingTexIndex() - 1;
+				assert(ceilingTexNum >= 0);
+				//color = texture[CEILING_TEXTURE].GetPixel(floorTexX, floorTexY);
+				color = texture[pOpen->GetCeilingTexIndex() - 1].GetPixel(floorTexX, floorTexY); // TODO: fix so you don't have to do -1 at runtime
 				Draw(x, SCREEN_HEIGHT - y, color);
+				//Draw(x, SCREEN_HEIGHT - y - 1, olc::CYAN);
 			}
 		}
 	}

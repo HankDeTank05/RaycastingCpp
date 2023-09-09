@@ -20,14 +20,8 @@ public:
 	bool OnUserUpdate(float fElapsedTime) override;
 
 private:
-	enum class FloorCasting
-	{
-		None,
-		Painters,
-		Vertical
-	};
 	void PaintersFloorCasting();
-	void TexturedRaycasting(FloorCasting algo);
+	void TexturedRaycasting();
 	void MovePlayer(float fElapsedTime);
 
 private:
