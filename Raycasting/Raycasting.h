@@ -20,7 +20,7 @@ public:
 	bool OnUserUpdate(float fElapsedTime) override;
 
 private:
-	void PaintersFloorCasting();
+	void PaintersFloorcasting();
 	void TexturedRaycasting();
 	void SmartFloorcasting();
 	void MovePlayer(float fElapsedTime);
@@ -60,6 +60,7 @@ private:
 	//uint32_t buffer[SCREEN_HEIGHT][SCREEN_WIDTH]; // y-coordinate first because it works per scanline
 	olc::Sprite texture[NUM_TEXTURES];
 
+	int pixelSize;
 };
 
 #endif

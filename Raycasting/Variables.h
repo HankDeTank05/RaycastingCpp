@@ -27,7 +27,7 @@ const int SCREEN_HEIGHT = SCREEN_WIDTH * ASPECT_WTOH;
 
 //* Option 3: CHOOSE HEIGHT, AUTO-WIDTH
 const float ASPECT_HTOW = 4.0f / 3.0f; // 4:3 aspect ratio
-const int SCREEN_HEIGHT = 128;
+const int SCREEN_HEIGHT = 256;
 const int SCREEN_WIDTH = static_cast<int>(SCREEN_HEIGHT * ASPECT_HTOW);
 //*/
 
@@ -43,10 +43,13 @@ const int SCREEN_SCALE_HEIGHT = 3;
 // -- OR -- //
 
 //* Option 2: CHOOSE UNIFORM SCALE FACTOR
-const int SCREEN_UNIFORM_SCALE = 6;
+const int SCREEN_UNIFORM_SCALE = 3;
 const int SCREEN_SCALE_WIDTH = SCREEN_UNIFORM_SCALE;
 const int SCREEN_SCALE_HEIGHT = SCREEN_UNIFORM_SCALE;
 //*/
+
+const int TARGET_FPS = 60;
+const float TARGET_FRAME_TIME = 1.0f / static_cast<float>(TARGET_FPS);
 
 const float MOVE_SPEED = 5.0;
 const float ROT_SPEED = 3.0;

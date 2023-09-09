@@ -9,7 +9,8 @@
 // big four
 
 Raycasting::Raycasting()
-	: player(22.0f, 11.5f, -1.0f, 0.0f, 0.0f, 0.66f)
+	: player(22.0f, 11.5f, -1.0f, 0.0f, 0.0f, 0.66f),
+	pixelSize(1)
 {
 	sAppName = "Raycasting";
 }
@@ -25,7 +26,7 @@ bool Raycasting::OnUserCreate()
 {
 	// called once at the start, so create things here
 
-	cellMap.LoadMapFromCSV("world_1");
+	cellMap.LoadMapFromCSV("world_2");
 
 	texture[0] = olc::Sprite("resources/textures/eagle.png");
 	texture[1] = olc::Sprite("resources/textures/redbrick.png");
@@ -45,6 +46,16 @@ bool Raycasting::OnUserUpdate(float fElapsedTime)
 
 	Clear(olc::BLACK);
 
+	//// auto-adjust resolution based on framerate
+	//if (fElapsedTime > TARGET_FRAME_TIME)
+	//{
+	//	pixelSize++;
+	//}
+	//else if (pixelSize > 1)
+	//{
+	//	pixelSize--;
+	//}
+
 	SmartFloorcasting();
 
 	TexturedRaycasting();
@@ -56,7 +67,7 @@ bool Raycasting::OnUserUpdate(float fElapsedTime)
 
 // raycasting functions
 
-void Raycasting::PaintersFloorCasting()
+void Raycasting::PaintersFloorcasting()
 {
 	///////////////////
 	// FLOOR CASTING //
@@ -121,11 +132,12 @@ void Raycasting::PaintersFloorCasting()
 
 void Raycasting::TexturedRaycasting()
 {
+
 	/////////////////////////////////
 	// TEXTURED RAYCASTING (WALLS) //
 	/////////////////////////////////
 
-	for (int x = 0; x < SCREEN_WIDTH; x++)
+	for (int x = 0; x < SCREEN_WIDTH; x += pixelSize)
 	{
 		// calculate ray pos and dir
 		float cameraX = 2.0f * x / static_cast<float>(SCREEN_WIDTH) - 1; // the x-coord in camera space
@@ -266,7 +278,7 @@ void Raycasting::TexturedRaycasting()
 
 		// starting texture coordinate
 		float texPos = (drawStart - SCREEN_HEIGHT / 2.0f + lineHeight / 2.0f) * step;
-		for (int y = drawStart; y < drawEnd; y++)
+		for (int y = drawStart; y < drawEnd; y += pixelSize)
 		{
 			// cast the texture coordinate to integer and mask it with (TEX_HEIGHT - 1) in case of overflow
 			int texY = static_cast<int>(texPos) & (TEX_HEIGHT - 1);
@@ -279,8 +291,8 @@ void Raycasting::TexturedRaycasting()
 				color = color / 2;
 			}
 
-			//buffer[y][x] = color;
-			Draw(x, y, color);
+			//Draw(x, y, color);
+			FillRect(x, y, pixelSize, pixelSize, color);
 		}
 
 		/*
@@ -371,7 +383,7 @@ void Raycasting::SmartFloorcasting()
 	// FLOOR CASTING (HORIZONTAL, SMART) //
 	///////////////////////////////////////
 
-	for (int y = SCREEN_HEIGHT / 2; y < SCREEN_HEIGHT; y++)
+	for (int y = SCREEN_HEIGHT / 2; y < SCREEN_HEIGHT; y += pixelSize)
 	{
 		// rayDir for leftmost ray (x = 0) and rightmost ray (x = SCREEN_WIDTH)
 		float rayDirX0 = player.GetDir().GetX() - player.GetPlane().GetX();
@@ -399,7 +411,7 @@ void Raycasting::SmartFloorcasting()
 		float floorX = player.GetPos().GetX() + rowDistance * rayDirX0;
 		float floorY = player.GetPos().GetY() + rowDistance * rayDirY0;
 
-		for (int x = 0; x < SCREEN_WIDTH; x++)
+		for (int x = 0; x < SCREEN_WIDTH; x += pixelSize)
 		{
 			// the cell coord is simply gotten from the integer parts of floorX and floorY
 			int cellX = static_cast<int>(floorX);
@@ -422,12 +434,14 @@ void Raycasting::SmartFloorcasting()
 				//color = texture[FLOOR_TEXTURE].GetPixel(tx, ty);
 				color = texture[pOpenCell->GetFloorTexIndex() - 1].GetPixel(tx, ty); // TODO: fix so you don't have to do -1 at runtime
 				color = color / 2; // make a bit darker
-				Draw(x, y, color);
+				//Draw(x, y, color);
+				FillRect(x, y, pixelSize, pixelSize, color);
 
 				// ceiling (symmetrical, at SCREEN_HEIGHT - y - 1 instead of y)
 				color = texture[pOpenCell->GetCeilingTexIndex() - 1].GetPixel(tx, ty); // TODO: fix so you don't have to do -1 at runtime
 				color = color / 2; // make a bit darker
-				Draw(x, SCREEN_HEIGHT - y - 1, color);
+				//Draw(x, SCREEN_HEIGHT - y - 1, color);
+				FillRect(x, SCREEN_HEIGHT - y - pixelSize, pixelSize, pixelSize, color);
 			}
 
 			floorX += floorStepX;
