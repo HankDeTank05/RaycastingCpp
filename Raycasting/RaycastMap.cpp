@@ -143,13 +143,21 @@ void RaycastMap::LoadMapFromCSV(std::string levelName)
 
 MapCell* RaycastMap::GetCell(int cellX, int cellY)
 {
-	assert(cellX >= 0);
-	assert(cellX < grid.size());
+	bool btmX = cellX >= 0;
+	bool topX = cellX < grid.size();
 
-	assert(cellY >= 0);
-	assert(cellY < grid[cellX].size());
+	if (btmX && topX)
+	{
+		bool btmY = cellY >= 0;
+		bool topY = cellY < grid[cellX].size();
 
-	return grid[cellX][cellY];
+		if (btmY && topY)
+		{
+			return grid[cellX][cellY];
+		}
+	}
+	
+	return nullptr;
 }
 
 int RaycastMap::ConvertCharToInt(char chr)

@@ -22,6 +22,7 @@ public:
 private:
 	void PaintersFloorCasting();
 	void TexturedRaycasting();
+	void SmartFloorcasting();
 	void MovePlayer(float fElapsedTime);
 
 private:

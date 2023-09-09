@@ -3,6 +3,8 @@
 #include "Variables.h"
 
 #include "Matrix33.h"
+#include "RaycastMap.h"
+#include "MapCell.h"
 
 Player::Player(float _posX, float _posY, float _dirX, float _dirY, float _planeX, float _planeY)
 	//: posX(_posX), posY(_posY),
@@ -38,65 +40,85 @@ Player::~Player()
 	// do nothing
 }
 
-void Player::MoveForward(float fElapsedTime)
+void Player::MoveForward(float fElapsedTime, RaycastMap* pMap)
 {
 	// speed modifiers
 	float moveSpeed = fElapsedTime * MOVE_SPEED;
-	
-	// TODO: replace constant map with map ref
-	if (WORLD_1[static_cast<int>(pos.GetX() + dir.GetX() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
+
+	int nextX = static_cast<int>(pos.GetX() + dir.GetX() * moveSpeed);
+	int nextY = static_cast<int>(pos.GetY() + dir.GetY() * moveSpeed);
+
+	MapCell* pCell = pMap->GetCell(nextX, pos.GetY());
+	if (pCell != nullptr && pCell->GetCellType() != MapCell::Type::Wall)
 	{
 		pos.SetX(pos.GetX() + dir.GetX() * moveSpeed);
 	}
-	if (WORLD_1[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() + dir.GetY() * moveSpeed)] == false)
+
+	pCell = pMap->GetCell(pos.GetX(), nextY);
+	if (pCell != nullptr && pCell->GetCellType() != MapCell::Type::Wall)
 	{
 		pos.SetY(pos.GetY() + dir.GetY() * moveSpeed);
 	}
 }
 
-void Player::MoveBackward(float fElapsedTime)
+void Player::MoveBackward(float fElapsedTime, RaycastMap* pMap)
 {
 	// speed modifiers
 	float moveSpeed = fElapsedTime * MOVE_SPEED;
 
-	// TODO: replace constant map with map ref
-	if (WORLD_1[static_cast<int>(pos.GetX() - dir.GetX() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
+	int nextX = static_cast<int>(pos.GetX() - dir.GetX() * moveSpeed);
+	int nextY = static_cast<int>(pos.GetY() - dir.GetY() * moveSpeed);
+
+	MapCell* pCell = pMap->GetCell(nextX, pos.GetY());
+	if (pCell != nullptr && pCell->GetCellType() != MapCell::Type::Wall)
 	{
 		pos.SetX(pos.GetX() - dir.GetX() * moveSpeed);
 	}
-	if (WORLD_1[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() - dir.GetY() * moveSpeed)] == false)
+
+	pCell = pMap->GetCell(pos.GetX(), nextY);
+	if (pCell != nullptr && pCell->GetCellType() != MapCell::Type::Wall)
 	{
 		pos.SetY(pos.GetY() - dir.GetY() * moveSpeed);
 	}
 }
 
-void Player::StrafeLeft(float fElapsedTime)
+void Player::StrafeLeft(float fElapsedTime, RaycastMap* pMap)
 {
 	// speed modifiers
 	float moveSpeed = fElapsedTime * MOVE_SPEED;
 
-	// TODO: replace constant map with map ref
-	if (WORLD_1[static_cast<int>(pos.GetX() - dir.GetY() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
+	int nextX = static_cast<int>(pos.GetX() - dir.GetY() * moveSpeed);
+	int nextY = static_cast<int>(pos.GetY() + dir.GetX() * moveSpeed);
+
+	MapCell* pCell = pMap->GetCell(nextX, pos.GetY());
+	if (pCell != nullptr && pCell->GetCellType() != MapCell::Type::Wall)
 	{
 		pos.SetX(pos.GetX() - dir.GetY() * moveSpeed);
 	}
-	if (WORLD_1[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() + dir.GetX() * moveSpeed)] == false)
+
+	pCell = pMap->GetCell(pos.GetX(), nextY);
+	if (pCell != nullptr && pCell->GetCellType() != MapCell::Type::Wall)
 	{
 		pos.SetY(pos.GetY() + dir.GetX() * moveSpeed);
 	}
 }
 
-void Player::StrafeRight(float fElapsedTime)
+void Player::StrafeRight(float fElapsedTime, RaycastMap* pMap)
 {
 	// speed modifiers
 	float moveSpeed = fElapsedTime * MOVE_SPEED;
 
-	// TODO: replace constant map with map ref
-	if (WORLD_1[static_cast<int>(pos.GetX() + dir.GetY() * moveSpeed)][static_cast<int>(pos.GetY())] == false)
+	int nextX = static_cast<int>(pos.GetX() + dir.GetY() * moveSpeed);
+	int nextY = static_cast<int>(pos.GetY() - dir.GetX() * moveSpeed);
+
+	MapCell* pCell = pMap->GetCell(nextX, pos.GetY());
+	if (pCell != nullptr && pCell->GetCellType() != MapCell::Type::Wall)
 	{
 		pos.SetX(pos.GetX() + dir.GetY() * moveSpeed);
 	}
-	if (WORLD_1[static_cast<int>(pos.GetX())][static_cast<int>(pos.GetY() - dir.GetX() * moveSpeed)] == false)
+
+	pCell = pMap->GetCell(pos.GetX(), nextY);
+	if (pCell != nullptr && pCell->GetCellType() != MapCell::Type::Wall)
 	{
 		pos.SetY(pos.GetY() - dir.GetX() * moveSpeed);
 	}

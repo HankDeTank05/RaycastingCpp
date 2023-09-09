@@ -3,6 +3,9 @@
 
 #include "Vector3.h"
 
+// forward declarations
+class RaycastMap;
+
 class Player
 {
 public:
@@ -20,11 +23,11 @@ public:
 
 	// movement functions
 
-	void MoveForward(float fElapsedTime);
-	void MoveBackward(float fElapsedTime);
+	void MoveForward(float fElapsedTime, RaycastMap* pMap);
+	void MoveBackward(float fElapsedTime, RaycastMap* pMap);
 
-	void StrafeLeft(float fElapsedTime);
-	void StrafeRight(float fElapsedTime);
+	void StrafeLeft(float fElapsedTime, RaycastMap* pMap);
+	void StrafeRight(float fElapsedTime, RaycastMap* pMap);
 
 	void RotateLeft(float fElapsedTime);
 	void RotateRight(float fElapsedTime);

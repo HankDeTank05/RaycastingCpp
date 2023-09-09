@@ -45,6 +45,8 @@ bool Raycasting::OnUserUpdate(float fElapsedTime)
 
 	Clear(olc::BLACK);
 
+	SmartFloorcasting();
+
 	TexturedRaycasting();
 
 	MovePlayer(fElapsedTime);
@@ -60,7 +62,7 @@ void Raycasting::PaintersFloorCasting()
 	// FLOOR CASTING //
 	///////////////////
 
-	for (int y = 0; y < SCREEN_HEIGHT; y++)
+	for (int y = SCREEN_HEIGHT / 2; y < SCREEN_HEIGHT; y++)
 	{
 		// rayDir for leftmost ray (x = 0) and rightmost ray (x = SCREEN_WIDTH)
 		float rayDirX0 = player.GetDir().GetX() - player.GetPlane().GetX();
@@ -91,12 +93,12 @@ void Raycasting::PaintersFloorCasting()
 		for (int x = 0; x < SCREEN_WIDTH; x++)
 		{
 			// the cell coord is simply gotten from the integer parts of floorX and floorY
-			int cellX = (int)(floorX);
-			int cellY = (int)(floorY);
+			int cellX = static_cast<int>(floorX);
+			int cellY = static_cast<int>(floorY);
 
 			// get the texture coordinate from the fractional part
-			int tx = (int)(TEX_WIDTH * (floorX - cellX)) & (TEX_WIDTH - 1);
-			int ty = (int)(TEX_HEIGHT * (floorY - cellY)) & (TEX_HEIGHT - 1);
+			int tx = static_cast<int>(TEX_WIDTH * (floorX - cellX)) & (TEX_WIDTH - 1);
+			int ty = static_cast<int>(TEX_HEIGHT * (floorY - cellY)) & (TEX_HEIGHT - 1);
 
 			floorX += floorStepX;
 			floorY += floorStepY;
@@ -119,12 +121,12 @@ void Raycasting::PaintersFloorCasting()
 
 void Raycasting::TexturedRaycasting()
 {
+	/////////////////////////////////
+	// TEXTURED RAYCASTING (WALLS) //
+	/////////////////////////////////
+
 	for (int x = 0; x < SCREEN_WIDTH; x++)
 	{
-		/////////////////////////////////
-		// TEXTURED RAYCASTING (WALLS) //
-		/////////////////////////////////
-
 		// calculate ray pos and dir
 		float cameraX = 2.0f * x / static_cast<float>(SCREEN_WIDTH) - 1; // the x-coord in camera space
 		Vector3 rayDir(player.GetDir().GetX() + player.GetPlane().GetX() * cameraX,
@@ -195,7 +197,8 @@ void Raycasting::TexturedRaycasting()
 
 			// check if ray hit a wall
 			pMapCell = cellMap.GetCell(mapX, mapY);
-			if (pMapCell->GetCellType() == MapCell::Type::Wall)
+			assert(pMapCell != nullptr);
+			if (pMapCell != nullptr && pMapCell->GetCellType() == MapCell::Type::Wall)
 			{
 				hit = 1;
 			}
@@ -280,6 +283,8 @@ void Raycasting::TexturedRaycasting()
 			Draw(x, y, color);
 		}
 
+		/*
+
 		//////////////////////////////////////
 		// FLOOR CASTING (VERTICAL VERSION) //
 		//////////////////////////////////////
@@ -350,10 +355,83 @@ void Raycasting::TexturedRaycasting()
 				int ceilingTexNum = pOpen->GetCeilingTexIndex() - 1;
 				assert(ceilingTexNum >= 0);
 				//color = texture[CEILING_TEXTURE].GetPixel(floorTexX, floorTexY);
-				color = texture[pOpen->GetCeilingTexIndex() - 1].GetPixel(floorTexX, floorTexY); // TODO: fix so you don't have to do -1 at runtime
+				color = texture[pOpen->GetCeilingTexIndex() - 1].GetPixel(floorTexX, floorTexY); 
 				Draw(x, SCREEN_HEIGHT - y, color);
 				//Draw(x, SCREEN_HEIGHT - y - 1, olc::CYAN);
 			}
+		}
+
+		//*/
+	}
+}
+
+void Raycasting::SmartFloorcasting()
+{
+	///////////////////////////////////////
+	// FLOOR CASTING (HORIZONTAL, SMART) //
+	///////////////////////////////////////
+
+	for (int y = SCREEN_HEIGHT / 2; y < SCREEN_HEIGHT; y++)
+	{
+		// rayDir for leftmost ray (x = 0) and rightmost ray (x = SCREEN_WIDTH)
+		float rayDirX0 = player.GetDir().GetX() - player.GetPlane().GetX();
+		float rayDirY0 = player.GetDir().GetY() - player.GetPlane().GetY();
+		float rayDirX1 = player.GetDir().GetX() + player.GetPlane().GetX();
+		float rayDirY1 = player.GetDir().GetY() + player.GetPlane().GetY();
+
+		// current y position compared to the center of the screen
+		int p = y - SCREEN_HEIGHT / 2;
+
+		// vertical position of camera
+		float posZ = 0.5 * SCREEN_HEIGHT;
+
+		// horizontal distance from the camera to the floor for the current row
+		// 0.5 is the z position exactly in the middle between the floor and ceiling
+		float rowDistance = posZ / p;
+
+		// calculate the real world step vector we have to add for each x (parallel to camera plane)
+		// adding step by step avoids multiplications with a weight in the inner loop
+		float floorStepX = rowDistance * (rayDirX1 - rayDirX0) / SCREEN_WIDTH;
+		float floorStepY = rowDistance * (rayDirY1 - rayDirY0) / SCREEN_WIDTH;
+
+		// real world coords of the leftmost column
+		// this will be updated as we step to the right
+		float floorX = player.GetPos().GetX() + rowDistance * rayDirX0;
+		float floorY = player.GetPos().GetY() + rowDistance * rayDirY0;
+
+		for (int x = 0; x < SCREEN_WIDTH; x++)
+		{
+			// the cell coord is simply gotten from the integer parts of floorX and floorY
+			int cellX = static_cast<int>(floorX);
+			int cellY = static_cast<int>(floorY);
+
+			MapCell* pMapCell = cellMap.GetCell(cellX, cellY);
+
+			if (pMapCell != nullptr && pMapCell->GetCellType() == MapCell::Type::Open)
+			{
+				CellOpen* pOpenCell = static_cast<CellOpen*>(pMapCell);
+
+				// get the texture coordinate from the fractional part
+				int tx = static_cast<int>(TEX_WIDTH * (floorX - cellX)) & (TEX_WIDTH - 1);
+				int ty = static_cast<int>(TEX_HEIGHT * (floorY - cellY)) & (TEX_HEIGHT - 1);
+
+				// choose the texture and draw the pixel
+				olc::Pixel color;
+
+				// floor
+				//color = texture[FLOOR_TEXTURE].GetPixel(tx, ty);
+				color = texture[pOpenCell->GetFloorTexIndex() - 1].GetPixel(tx, ty); // TODO: fix so you don't have to do -1 at runtime
+				color = color / 2; // make a bit darker
+				Draw(x, y, color);
+
+				// ceiling (symmetrical, at SCREEN_HEIGHT - y - 1 instead of y)
+				color = texture[pOpenCell->GetCeilingTexIndex() - 1].GetPixel(tx, ty); // TODO: fix so you don't have to do -1 at runtime
+				color = color / 2; // make a bit darker
+				Draw(x, SCREEN_HEIGHT - y - 1, color);
+			}
+
+			floorX += floorStepX;
+			floorY += floorStepY;
 		}
 	}
 }
@@ -363,25 +441,25 @@ void Raycasting::MovePlayer(float fElapsedTime)
 	// move forward if no wall in front of you
 	if (GetKey(MOVE_FWD_KEY).bHeld)
 	{
-		player.MoveForward(fElapsedTime);
+		player.MoveForward(fElapsedTime, &cellMap);
 	}
 
 	// move backward if no wall behind you
 	if (GetKey(MOVE_BACK_KEY).bHeld)
 	{
-		player.MoveBackward(fElapsedTime);
+		player.MoveBackward(fElapsedTime, &cellMap);
 	}
 
 	// strafe left if no wall to your left
 	if (GetKey(STRAFE_LEFT_KEY).bHeld)
 	{
-		player.StrafeLeft(fElapsedTime);
+		player.StrafeLeft(fElapsedTime, &cellMap);
 	}
 
 	// strafe right if no wall to your right
 	if (GetKey(STRAFE_RIGHT_KEY).bHeld)
 	{
-		player.StrafeRight(fElapsedTime);
+		player.StrafeRight(fElapsedTime, &cellMap);
 	}
 
 	// rotate to the left
