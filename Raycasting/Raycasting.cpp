@@ -9,7 +9,10 @@
 // big four
 
 Raycasting::Raycasting()
-	: player(22.0f, 11.5f, -1.0f, 0.0f, 0.0f, 0.66f),
+	: cellMap(),
+	player(22.0f, 11.5f, -1.0f, 0.0f, 0.0f, 0.66f),
+	buffer(SCREEN_WIDTH, SCREEN_HEIGHT),
+	texture(),
 	pixelSize(1)
 {
 	sAppName = "Raycasting";
@@ -28,14 +31,56 @@ bool Raycasting::OnUserCreate()
 
 	cellMap.LoadMapFromCSV("world_2");
 
-	texture[0] = olc::Sprite("resources/textures/eagle.png");
-	texture[1] = olc::Sprite("resources/textures/redbrick.png");
-	texture[2] = olc::Sprite("resources/textures/purplestone.png");
-	texture[3] = olc::Sprite("resources/textures/greystone.png");
-	texture[4] = olc::Sprite("resources/textures/bluestone.png");
-	texture[5] = olc::Sprite("resources/textures/mossy.png");
-	texture[6] = olc::Sprite("resources/textures/wood.png");
-	texture[7] = olc::Sprite("resources/textures/colorstone.png");
+	olc::Sprite currTex;
+
+	for (int texNum = 0; texNum < NUM_TEXTURES; texNum++)
+	{
+		switch (texNum)
+		{
+		case 0:
+			currTex = olc::Sprite("resources/textures/eagle.png");
+			break;
+
+		case 1:
+			currTex = olc::Sprite("resources/textures/redbrick.png");
+			break;
+
+		case 2:
+			currTex = olc::Sprite("resources/textures/purplestone.png");
+			break;
+
+		case 3:
+			currTex = olc::Sprite("resources/textures/greystone.png");
+			break;
+
+		case 4:
+			currTex = olc::Sprite("resources/textures/bluestone.png");
+			break;
+
+		case 5:
+			currTex = olc::Sprite("resources/textures/mossy.png");
+			break;
+
+		case 6:
+			currTex = olc::Sprite("resources/textures/wood.png");
+			break;
+
+		case 7:
+			currTex = olc::Sprite("resources/textures/colorstone.png");
+			break;
+
+		default:
+			assert(false);
+		}
+
+		for (int x = 0; x < TEX_WIDTH; x++)
+		{
+			for (int y = 0; y < TEX_HEIGHT; y++)
+			{
+				texture[texNum][x][y] = currTex.GetPixel(x, y);
+			}
+		}
+	}
 
 	return true;
 }
@@ -59,6 +104,8 @@ bool Raycasting::OnUserUpdate(float fElapsedTime)
 	SmartFloorcasting();
 
 	TexturedRaycasting();
+
+	DrawSprite(0, 0, &buffer);
 
 	MovePlayer(fElapsedTime);
 
@@ -118,12 +165,12 @@ void Raycasting::PaintersFloorcasting()
 			olc::Pixel color;
 
 			// floor
-			color = texture[FLOOR_TEXTURE].GetPixel(tx, ty);
+			color = texture[FLOOR_TEXTURE][tx][ty];
 			color = color / 2; // make a bit darker
 			Draw(x, y, color);
 
 			// ceiling (symmetrical, at SCREEN_HEIGHT - y - 1 instead of y)
-			color = texture[CEILING_TEXTURE].GetPixel(tx, ty);
+			color = texture[CEILING_TEXTURE][tx][ty];
 			color = color / 2; // make a bit darker
 			Draw(x, SCREEN_HEIGHT - y - 1, color);
 		}
@@ -283,7 +330,7 @@ void Raycasting::TexturedRaycasting()
 			// cast the texture coordinate to integer and mask it with (TEX_HEIGHT - 1) in case of overflow
 			int texY = static_cast<int>(texPos) & (TEX_HEIGHT - 1);
 			texPos += step;
-			olc::Pixel color = texture[texNum].GetPixel(texX, texY);
+			olc::Pixel color = texture[texNum][texX][texY];
 
 			// make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
 			if (side == 1)
@@ -292,7 +339,7 @@ void Raycasting::TexturedRaycasting()
 			}
 
 			//Draw(x, y, color);
-			FillRect(x, y, pixelSize, pixelSize, color);
+			buffer.SetPixel(x, y, color);
 		}
 
 		/*
@@ -386,16 +433,14 @@ void Raycasting::SmartFloorcasting()
 	for (int y = SCREEN_HEIGHT / 2; y < SCREEN_HEIGHT; y += pixelSize)
 	{
 		// rayDir for leftmost ray (x = 0) and rightmost ray (x = SCREEN_WIDTH)
-		float rayDirX0 = player.GetDir().GetX() - player.GetPlane().GetX();
-		float rayDirY0 = player.GetDir().GetY() - player.GetPlane().GetY();
-		float rayDirX1 = player.GetDir().GetX() + player.GetPlane().GetX();
-		float rayDirY1 = player.GetDir().GetY() + player.GetPlane().GetY();
+		Vector3 rayDirLeft = player.GetDir() - player.GetPlane();
+		Vector3 rayDirRight = player.GetDir() + player.GetPlane();
 
 		// current y position compared to the center of the screen
 		int p = y - SCREEN_HEIGHT / 2;
 
 		// vertical position of camera
-		float posZ = 0.5 * SCREEN_HEIGHT;
+		float posZ = 0.5f * SCREEN_HEIGHT;
 
 		// horizontal distance from the camera to the floor for the current row
 		// 0.5 is the z position exactly in the middle between the floor and ceiling
@@ -403,19 +448,17 @@ void Raycasting::SmartFloorcasting()
 
 		// calculate the real world step vector we have to add for each x (parallel to camera plane)
 		// adding step by step avoids multiplications with a weight in the inner loop
-		float floorStepX = rowDistance * (rayDirX1 - rayDirX0) / SCREEN_WIDTH;
-		float floorStepY = rowDistance * (rayDirY1 - rayDirY0) / SCREEN_WIDTH;
+		Vector3 floorStep = rowDistance * (rayDirRight - rayDirLeft) / SCREEN_WIDTH;
 
 		// real world coords of the leftmost column
 		// this will be updated as we step to the right
-		float floorX = player.GetPos().GetX() + rowDistance * rayDirX0;
-		float floorY = player.GetPos().GetY() + rowDistance * rayDirY0;
+		Vector3 floorPos = player.GetPos() + rowDistance * rayDirLeft;
 
 		for (int x = 0; x < SCREEN_WIDTH; x += pixelSize)
 		{
 			// the cell coord is simply gotten from the integer parts of floorX and floorY
-			int cellX = static_cast<int>(floorX);
-			int cellY = static_cast<int>(floorY);
+			int cellX = static_cast<int>(floorPos.GetX());
+			int cellY = static_cast<int>(floorPos.GetY());
 
 			MapCell* pMapCell = cellMap.GetCell(cellX, cellY);
 
@@ -424,28 +467,29 @@ void Raycasting::SmartFloorcasting()
 				CellOpen* pOpenCell = static_cast<CellOpen*>(pMapCell);
 
 				// get the texture coordinate from the fractional part
-				int tx = static_cast<int>(TEX_WIDTH * (floorX - cellX)) & (TEX_WIDTH - 1);
-				int ty = static_cast<int>(TEX_HEIGHT * (floorY - cellY)) & (TEX_HEIGHT - 1);
+				int tx = static_cast<int>(TEX_WIDTH * (floorPos.GetX() - cellX)) & (TEX_WIDTH - 1);
+				int ty = static_cast<int>(TEX_HEIGHT * (floorPos.GetY() - cellY)) & (TEX_HEIGHT - 1);
 
 				// choose the texture and draw the pixel
 				olc::Pixel color;
 
 				// floor
 				//color = texture[FLOOR_TEXTURE].GetPixel(tx, ty);
-				color = texture[pOpenCell->GetFloorTexIndex() - 1].GetPixel(tx, ty); // TODO: fix so you don't have to do -1 at runtime
+				color = texture[pOpenCell->GetFloorTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
 				color = color / 2; // make a bit darker
 				//Draw(x, y, color);
-				FillRect(x, y, pixelSize, pixelSize, color);
+				buffer.SetPixel(x, y, color);
 
 				// ceiling (symmetrical, at SCREEN_HEIGHT - y - 1 instead of y)
-				color = texture[pOpenCell->GetCeilingTexIndex() - 1].GetPixel(tx, ty); // TODO: fix so you don't have to do -1 at runtime
+				color = texture[pOpenCell->GetCeilingTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
 				color = color / 2; // make a bit darker
 				//Draw(x, SCREEN_HEIGHT - y - 1, color);
-				FillRect(x, SCREEN_HEIGHT - y - pixelSize, pixelSize, pixelSize, color);
+				buffer.SetPixel(x, SCREEN_HEIGHT - y - 1, color);
 			}
 
-			floorX += floorStepX;
-			floorY += floorStepY;
+			//floorPos += floorStep;
+			floorPos.SetX(floorPos.GetX() + floorStep.GetX());
+			floorPos.SetY(floorPos.GetY() + floorStep.GetY());
 		}
 	}
 }
