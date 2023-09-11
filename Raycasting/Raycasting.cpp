@@ -82,7 +82,8 @@ bool Raycasting::OnUserCreate()
 		{
 			for (int y = 0; y < TEX_HEIGHT; y++)
 			{
-				texture[texNum][x][y] = currTex.GetPixel(x, y);
+				texture[texNum][x][y] = currTex.GetPixel(x, y).n;
+				darkenedTexture[texNum][x][y] = (currTex.GetPixel(x, y) / 2).n;
 			}
 		}
 	}
@@ -337,12 +338,17 @@ void Raycasting::TexturedRaycasting()
 			// cast the texture coordinate to integer and mask it with (TEX_HEIGHT - 1) in case of overflow
 			int texY = static_cast<int>(texPos) & (TEX_HEIGHT - 1);
 			texPos += step;
-			olc::Pixel color = texture[texNum][texX][texY];
+			int color;
 
 			// make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
-			if (side == 1)
+			if (side == 0)
 			{
-				color = color / 2;
+				color = texture[texNum][texX][texY];
+			}
+			else
+			{
+				assert(side == 1);
+				color = darkenedTexture[texNum][texX][texY];
 			}
 
 			//Draw(x, y, color);
@@ -484,14 +490,14 @@ void Raycasting::SmartFloorcasting()
 
 					// floor
 					//color = texture[FLOOR_TEXTURE].GetPixel(tx, ty);
-					color = texture[pOpenCell->GetFloorTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
-					color = color / 2; // make a bit darker
+					color = darkenedTexture[pOpenCell->GetFloorTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
+					//color = color / 2; // make a bit darker
 					//Draw(x, y, color);
 					buffer.SetPixel(x, y, color);
 
 					// ceiling (symmetrical, at SCREEN_HEIGHT - y - 1 instead of y)
-					color = texture[pOpenCell->GetCeilingTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
-					color = color / 2; // make a bit darker
+					color = darkenedTexture[pOpenCell->GetCeilingTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
+					//color = color / 2; // make a bit darker
 					//Draw(x, SCREEN_HEIGHT - y - 1, color);
 					buffer.SetPixel(x, SCREEN_HEIGHT - y - 1, color);
 				}

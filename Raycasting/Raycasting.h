@@ -31,7 +31,8 @@ private:
 	//uint32_t buffer[SCREEN_HEIGHT][SCREEN_WIDTH]; // y-coordinate first because it works per scanline
 	olc::Sprite buffer;
 	float zbuff[SCREEN_WIDTH];
-	olc::Pixel texture[NUM_TEXTURES][TEX_WIDTH][TEX_HEIGHT];
+	int texture[NUM_TEXTURES][TEX_WIDTH][TEX_HEIGHT];
+	int darkenedTexture[NUM_TEXTURES][TEX_WIDTH][TEX_HEIGHT];
 
 	int pixelSize;
 };
