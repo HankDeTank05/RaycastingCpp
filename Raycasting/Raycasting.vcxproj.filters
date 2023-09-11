@@ -22,18 +22,18 @@
     <Filter Include="Source Files\Raycasting Engine\Map Data">
       <UniqueIdentifier>{225c2213-e3b2-476d-ad69-88ab2284fcb9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\BSP Engine">
+      <UniqueIdentifier>{9f2a025e-60fc-49c7-a7b0-567d8eb35615}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\BSP Engine\Map Data">
+      <UniqueIdentifier>{cad17220-ba2d-4bc6-adbf-f4378e452fa4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Variables.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="olcPixelGameEngine.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SectorMap.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BinarySpacePartitioning.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Raycasting.h">
@@ -60,12 +60,15 @@
     <ClInclude Include="CellOpen.h">
       <Filter>Source Files\Raycasting Engine\Map Data</Filter>
     </ClInclude>
+    <ClInclude Include="SectorMap.h">
+      <Filter>Source Files\BSP Engine\Map Data</Filter>
+    </ClInclude>
+    <ClInclude Include="BinarySpacePartitioning.h">
+      <Filter>Source Files\BSP Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SectorMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Raycasting.cpp">
@@ -91,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="RaycastMap.cpp">
       <Filter>Source Files\Raycasting Engine\Map Data</Filter>
+    </ClCompile>
+    <ClCompile Include="SectorMap.cpp">
+      <Filter>Source Files\BSP Engine\Map Data</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

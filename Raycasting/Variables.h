@@ -10,7 +10,7 @@ const int MAP_HEIGHT = 24;
 // RENDER RESOLUTION //
 ///////////////////////
 
-//* Option 1: CHOOSE WIDTH AND HEIGHT MANUALLY
+/* Option 1: CHOOSE WIDTH AND HEIGHT MANUALLY
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 //*/
@@ -25,7 +25,7 @@ const int SCREEN_HEIGHT = SCREEN_WIDTH * ASPECT_WTOH;
 
 // -- OR -- //
 
-/* Option 3: CHOOSE HEIGHT, AUTO-WIDTH
+//* Option 3: CHOOSE HEIGHT, AUTO-WIDTH
 const float ASPECT_HTOW = 4.0f / 3.0f; // 4:3 aspect ratio
 const int SCREEN_HEIGHT = 256;
 const int SCREEN_WIDTH = static_cast<int>(SCREEN_HEIGHT * ASPECT_HTOW);
@@ -43,7 +43,7 @@ const int SCREEN_SCALE_HEIGHT = 3;
 // -- OR -- //
 
 //* Option 2: CHOOSE UNIFORM SCALE FACTOR
-const int SCREEN_UNIFORM_SCALE = 2;
+const int SCREEN_UNIFORM_SCALE = 3;
 const int SCREEN_SCALE_WIDTH = SCREEN_UNIFORM_SCALE;
 const int SCREEN_SCALE_HEIGHT = SCREEN_UNIFORM_SCALE;
 //*/
