@@ -3,24 +3,18 @@
 
 #include <vector>
 
+// forward declarations
+class Sector;
+
 class SectorMap
 {
 public:
 	SectorMap();
 
-	void AddWall(int x0, int y0, int x1, int y1, bool invisible = false);
-
-	struct Wall
-	{
-		int x0;
-		int y0;
-		int x1;
-		int y1;
-		bool invisible;
-	};
+	void AddSector(Sector* pSector);
 
 private:
-	std::vector<SectorMap::Wall> wallList;
+	std::vector<Sector*> wallList;
 };
 
 #endif

@@ -29,11 +29,8 @@ public: // operators
 	Vector3 operator/(float scalar);
 	Vector3 operator/(int scalar);
 
-private: // prevent implicit conversions
-	Vector3 operator*(double scalar);
-	friend Vector3 operator*(double scalar, const Vector3& vector);
-
-	Vector3 operator/(double scalar);
+public: // vector math
+	Vector3 cross(const Vector3& other);
 
 public: // accessors
 	float GetX() const;
@@ -51,10 +48,14 @@ private:
 	float y;
 	float z;
 
-private:
-	// prevent implicit conversions
+private: // prevent implicit conversions
 	Vector3(int, int, int);
 	Vector3(double, double, double);
+	Vector3 operator*(double scalar);
+
+	friend Vector3 operator*(double scalar, const Vector3& vector);
+
+	Vector3 operator/(double scalar);
 };
 
 #endif
