@@ -29,6 +29,11 @@ bool Raycasting::OnUserCreate()
 {
 	// called once at the start, so create things here
 
+	for (int x = 0; x < SCREEN_WIDTH; x++)
+	{
+		zbuff[x] = 100.0f;
+	}
+
 	cellMap.LoadMapFromCSV("world_2");
 
 	olc::Sprite currTex;
@@ -89,7 +94,7 @@ bool Raycasting::OnUserUpdate(float fElapsedTime)
 {
 	// called once per frame
 
-	Clear(olc::BLACK);
+	//Clear(olc::BLACK);
 
 	//// auto-adjust resolution based on framerate
 	//if (fElapsedTime > TARGET_FRAME_TIME)
@@ -101,9 +106,9 @@ bool Raycasting::OnUserUpdate(float fElapsedTime)
 	//	pixelSize--;
 	//}
 
-	SmartFloorcasting();
-
 	TexturedRaycasting();
+
+	SmartFloorcasting();
 
 	DrawSprite(0, 0, &buffer);
 
@@ -273,6 +278,8 @@ void Raycasting::TexturedRaycasting()
 		{
 			perpWallDist = (sideDistY - deltaDistY);
 		}
+
+		zbuff[x] = perpWallDist;
 
 		// calculate height of line to draw on screen
 		int lineHeight = static_cast<int>(SCREEN_HEIGHT / perpWallDist);
@@ -456,35 +463,38 @@ void Raycasting::SmartFloorcasting()
 
 		for (int x = 0; x < SCREEN_WIDTH; x += pixelSize)
 		{
-			// the cell coord is simply gotten from the integer parts of floorX and floorY
-			int cellX = static_cast<int>(floorPos.GetX());
-			int cellY = static_cast<int>(floorPos.GetY());
-
-			MapCell* pMapCell = cellMap.GetCell(cellX, cellY);
-
-			if (pMapCell != nullptr && pMapCell->GetCellType() == MapCell::Type::Open)
+			if (rowDistance < zbuff[x])
 			{
-				CellOpen* pOpenCell = static_cast<CellOpen*>(pMapCell);
+				// the cell coord is simply gotten from the integer parts of floorX and floorY
+				int cellX = static_cast<int>(floorPos.GetX());
+				int cellY = static_cast<int>(floorPos.GetY());
 
-				// get the texture coordinate from the fractional part
-				int tx = static_cast<int>(TEX_WIDTH * (floorPos.GetX() - cellX)) & (TEX_WIDTH - 1);
-				int ty = static_cast<int>(TEX_HEIGHT * (floorPos.GetY() - cellY)) & (TEX_HEIGHT - 1);
+				MapCell* pMapCell = cellMap.GetCell(cellX, cellY);
 
-				// choose the texture and draw the pixel
-				olc::Pixel color;
+				if (pMapCell != nullptr && pMapCell->GetCellType() == MapCell::Type::Open)
+				{
+					CellOpen* pOpenCell = static_cast<CellOpen*>(pMapCell);
 
-				// floor
-				//color = texture[FLOOR_TEXTURE].GetPixel(tx, ty);
-				color = texture[pOpenCell->GetFloorTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
-				//color = color / 2; // make a bit darker
-				//Draw(x, y, color);
-				buffer.SetPixel(x, y, color);
+					// get the texture coordinate from the fractional part
+					int tx = static_cast<int>(TEX_WIDTH * (floorPos.GetX() - cellX)) & (TEX_WIDTH - 1);
+					int ty = static_cast<int>(TEX_HEIGHT * (floorPos.GetY() - cellY)) & (TEX_HEIGHT - 1);
 
-				// ceiling (symmetrical, at SCREEN_HEIGHT - y - 1 instead of y)
-				color = texture[pOpenCell->GetCeilingTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
-				//color = color / 2; // make a bit darker
-				//Draw(x, SCREEN_HEIGHT - y - 1, color);
-				buffer.SetPixel(x, SCREEN_HEIGHT - y - 1, color);
+					// choose the texture and draw the pixel
+					olc::Pixel color;
+
+					// floor
+					//color = texture[FLOOR_TEXTURE].GetPixel(tx, ty);
+					color = texture[pOpenCell->GetFloorTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
+					color = color / 2; // make a bit darker
+					//Draw(x, y, color);
+					buffer.SetPixel(x, y, color);
+
+					// ceiling (symmetrical, at SCREEN_HEIGHT - y - 1 instead of y)
+					color = texture[pOpenCell->GetCeilingTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
+					color = color / 2; // make a bit darker
+					//Draw(x, SCREEN_HEIGHT - y - 1, color);
+					buffer.SetPixel(x, SCREEN_HEIGHT - y - 1, color);
+				}
 			}
 
 			//floorPos += floorStep;

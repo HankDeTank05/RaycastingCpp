@@ -90,7 +90,7 @@
       <Filter>Source Files\Raycasting Engine\Map Data</Filter>
     </ClCompile>
     <ClCompile Include="RaycastMap.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Raycasting Engine\Map Data</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
