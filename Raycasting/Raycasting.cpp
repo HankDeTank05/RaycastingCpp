@@ -476,13 +476,13 @@ void Raycasting::SmartFloorcasting()
 				// floor
 				//color = texture[FLOOR_TEXTURE].GetPixel(tx, ty);
 				color = texture[pOpenCell->GetFloorTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
-				color = color / 2; // make a bit darker
+				//color = color / 2; // make a bit darker
 				//Draw(x, y, color);
 				buffer.SetPixel(x, y, color);
 
 				// ceiling (symmetrical, at SCREEN_HEIGHT - y - 1 instead of y)
 				color = texture[pOpenCell->GetCeilingTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
-				color = color / 2; // make a bit darker
+				//color = color / 2; // make a bit darker
 				//Draw(x, SCREEN_HEIGHT - y - 1, color);
 				buffer.SetPixel(x, SCREEN_HEIGHT - y - 1, color);
 			}
