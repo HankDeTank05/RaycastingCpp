@@ -154,9 +154,11 @@
     <ClInclude Include="SectorMap.h" />
     <ClInclude Include="Variables.h" />
     <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Vector4.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BinarySpacePartitioning.cpp" />
+    <ClCompile Include="BSPNode.cpp" />
     <ClCompile Include="CellOpen.cpp" />
     <ClCompile Include="CellWall.cpp" />
     <ClCompile Include="LineDef.cpp" />
