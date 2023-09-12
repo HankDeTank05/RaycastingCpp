@@ -3,10 +3,11 @@
 
 // forward declarations
 class LineDef;
-class Vector3;
+class Vector4;
 
 class BSPNode
 {
+public:
 	BSPNode() = delete;
 	BSPNode(const BSPNode& bspn) = delete;
 	BSPNode& operator=(const BSPNode& bspn) = delete;
@@ -14,11 +15,14 @@ class BSPNode
 
 	BSPNode(LineDef& lineDef);
 
-	bool IsInFront(const Vector3& pos);
+	bool IsPointInFront(const Vector4& pos);
+
+	BSPNode* GetBack() const;
+	BSPNode* GetFront() const;
 
 private:
-	BSPNode* front;
-	BSPNode* back;
+	BSPNode* pBack;
+	BSPNode* pFront;
 	LineDef& lineDef;
 };
 

@@ -91,12 +91,6 @@ Vector3 Vector3::operator/(int scalar)
 	return (*this) / static_cast<float>(scalar);
 }
 
-Vector3 Vector3::cross(const Vector3& other)
-{
-	return Vector3(this->y * other.z - this->z * other.y,
-		this->x * other.y - );
-}
-
 Vector3 Vector3::operator*(double scalar)
 {
 	return Vector3();

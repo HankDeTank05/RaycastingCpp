@@ -3,7 +3,10 @@
 
 #include "olcPixelGameEngine.h"
 
+#include "Variables.h"
+
 #include "SectorMap.h"
+#include "Vector4.h"
 
 class BinarySpacePartitioning : public olc::PixelGameEngine
 {
@@ -19,6 +22,9 @@ public:
 
 private:
 	SectorMap map;
+	Vector4 pos;
+	Vector4 dir;
+	Vector4 plane;
 };
 
 #endif

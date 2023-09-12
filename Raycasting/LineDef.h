@@ -1,22 +1,26 @@
 #ifndef LINE_DEF_H
 #define LINE_DEF_H
 
-#include "Vector3.h"
+#include "Vector4.h"
 
 class LineDef
 {
 public:
 	LineDef() = delete;
-	LineDef(const LineDef& ld) = delete;
+	LineDef(const LineDef& ld);
 	LineDef& operator=(const LineDef& ld) = delete;
 	virtual ~LineDef();
 
-	LineDef(float x0, float y0, float x1, float y1, float nx, float ny);
+	LineDef(float x0, float y0, float x1, float y1);
 
+	Vector4 GetP0() const;
+	//Vector4 GetP1() const;
+	Vector4 GetNormal() const;
+	
 protected:
-	Vector3 p0;
-	Vector3 p1;
-	Vector3 normal;
+	Vector4 p0;
+	Vector4 p1;
+	Vector4 normal;
 };
 
 #endif

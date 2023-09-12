@@ -3,18 +3,22 @@
 
 #include <vector>
 
+#include "LineDef.h"
+
 // forward declarations
-class Sector;
+class BSPNode;
 
 class SectorMap
 {
 public:
 	SectorMap();
 
-	void AddSector(Sector* pSector);
+	void AddLineDef(LineDef newLineDef);
+	std::vector<LineDef> GetLineDefs() const;
 
 private:
-	std::vector<Sector*> wallList;
+	std::vector<LineDef> linedefs;
+	BSPNode* treeRoot;
 };
 
 #endif

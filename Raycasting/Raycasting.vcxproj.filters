@@ -66,6 +66,18 @@
     <ClInclude Include="BinarySpacePartitioning.h">
       <Filter>Source Files\BSP Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Vector4.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Sector.h">
+      <Filter>Source Files\BSP Engine\Map Data</Filter>
+    </ClInclude>
+    <ClInclude Include="LineDef.h">
+      <Filter>Source Files\BSP Engine\Map Data</Filter>
+    </ClInclude>
+    <ClInclude Include="BSPNode.h">
+      <Filter>Source Files\BSP Engine\Map Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -97,6 +109,21 @@
     </ClCompile>
     <ClCompile Include="SectorMap.cpp">
       <Filter>Source Files\BSP Engine\Map Data</Filter>
+    </ClCompile>
+    <ClCompile Include="LineDef.cpp">
+      <Filter>Source Files\BSP Engine\Map Data</Filter>
+    </ClCompile>
+    <ClCompile Include="BSPNode.cpp">
+      <Filter>Source Files\BSP Engine\Map Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Sector.cpp">
+      <Filter>Source Files\BSP Engine\Map Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector4.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="BinarySpacePartitioning.cpp">
+      <Filter>Source Files\BSP Engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
