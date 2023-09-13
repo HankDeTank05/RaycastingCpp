@@ -78,6 +78,9 @@
     <ClInclude Include="BSPNode.h">
       <Filter>Source Files\BSP Engine\Map Data</Filter>
     </ClInclude>
+    <ClInclude Include="Matrix44.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -124,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="BinarySpacePartitioning.cpp">
       <Filter>Source Files\BSP Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix44.cpp">
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -146,6 +146,7 @@
     <ClInclude Include="LineDef.h" />
     <ClInclude Include="MapCell.h" />
     <ClInclude Include="Matrix33.h" />
+    <ClInclude Include="Matrix44.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Raycasting.h" />
@@ -165,6 +166,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapCell.cpp" />
     <ClCompile Include="Matrix33.cpp" />
+    <ClCompile Include="Matrix44.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Raycasting.cpp" />
     <ClCompile Include="RaycastMap.cpp" />

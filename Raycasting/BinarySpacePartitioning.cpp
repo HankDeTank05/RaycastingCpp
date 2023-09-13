@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "Vector4.h"
+#include "Matrix44.h"
 #include "LineDef.h"
 
 BinarySpacePartitioning::BinarySpacePartitioning()
@@ -62,6 +63,8 @@ bool BinarySpacePartitioning::OnUserCreate()
 
 bool BinarySpacePartitioning::OnUserUpdate(float fElapsedTime)
 {
+	Clear(olc::BLACK);
+
 	std::vector<LineDef> lineDefs = worldMap.GetLineDefs();
 
 	for (int ld = 0; ld < lineDefs.size(); ld++)
@@ -82,6 +85,8 @@ bool BinarySpacePartitioning::OnUserUpdate(float fElapsedTime)
 
 			float leftAngle = dirToLeft.dot(comparisonAngle);
 			float rightAngle = dirToRight.dot(comparisonAngle);
+
+			assert(leftAngle > rightAngle);
 
 			// binary search for the proper column to draw
 			int leftX = BinSearchForX(leftAngle);
@@ -117,10 +122,31 @@ bool BinarySpacePartitioning::OnUserUpdate(float fElapsedTime)
 					drawEnd = SCREEN_HEIGHT - 1;
 				}
 
-				DrawLine(x, drawStart, x, drawEnd);
+				olc::Pixel color = olc::WHITE;
+
+				Vector4 normalizedNormal = currLineDef.GetNormal().getNorm();
+				Vector4 normalizedDir = dir.getNorm();
+				float colorAdjustment = abs(normalizedNormal.dot(normalizedDir));
+
+				DrawLine(x, drawStart, x, drawEnd, color / colorAdjustment);
 			}
 		}
 	}
+
+	if (GetKey(ROTATE_LEFT_KEY).bHeld)
+	{
+		Matrix44 rotMat = Matrix44::RotY(MOVE_SPEED * fElapsedTime);
+		dir = rotMat * dir;
+		plane = rotMat * plane;
+	}
+
+	if (GetKey(ROTATE_RIGHT_KEY).bHeld)
+	{
+		Matrix44 rotMat = Matrix44::RotY(-MOVE_SPEED * fElapsedTime);
+		dir = rotMat * dir;
+		plane = rotMat * plane;
+	}
+
 	return true;
 }
 
@@ -134,8 +160,12 @@ int BinarySpacePartitioning::BinSearchForX(float angle, int left, int right)
 	int mid = (left + right) / 2;
 
 	// make sure indices are valid
-	assert(left < mid);
-	assert(mid < right);
+	assert(left <= mid);
+	assert(mid <= right);
+	if (left == right)
+	{
+		return left;
+	}
 	assert(0 <= left);
 	assert(right < angleToX.size());
 
@@ -147,7 +177,7 @@ int BinarySpacePartitioning::BinSearchForX(float angle, int left, int right)
 	if (angleToX[left] >= angle && angle > angleToX[mid])
 	{
 		// case: imperfect match
-		if (angle != angleToX[left] && left == mid - 1)
+		if (left == mid - 1 && angle != angleToX[left])
 		{
 			return left;
 		}
@@ -159,7 +189,17 @@ int BinarySpacePartitioning::BinSearchForX(float angle, int left, int right)
 	else if (angleToX[mid] >= angle && angle >= angleToX[right])
 	{
 		// case: imperfect match
-
+		if (mid == right - 1)
+		{
+			if (angle == angleToX[mid] || angle > angleToX[right])
+			{
+				return mid;
+			}
+			else if (angle == angleToX[right])
+			{
+				return right;
+			}
+		}
 		// case: still searching
 		return BinSearchForX(angle, mid, right);
 	}
