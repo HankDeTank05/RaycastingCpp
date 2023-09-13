@@ -1,6 +1,8 @@
 #ifndef BINARY_SPACE_PARTITIONING_H
 #define BINARY_SPACE_PARTITIONING_H
 
+#include <map>
+
 #include "olcPixelGameEngine.h"
 
 #include "Variables.h"
@@ -20,8 +22,13 @@ public:
 	virtual bool OnUserCreate() override;
 	virtual bool OnUserUpdate(float fElapsedTime) override;
 
+private: // internal helper functions
+	int BinSearchForX(float angle);
+	int BinSearchForX(float angle, int left, int right);
+
 private:
-	SectorMap map;
+	std::array<float, SCREEN_WIDTH> angleToX;
+	SectorMap worldMap;
 	Vector4 pos;
 	Vector4 dir;
 	Vector4 plane;

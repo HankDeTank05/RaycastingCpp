@@ -11,10 +11,10 @@ public:
 	LineDef& operator=(const LineDef& ld) = delete;
 	virtual ~LineDef();
 
-	LineDef(float x0, float y0, float x1, float y1);
+	LineDef(float x0, float z0, float x1, float z1);
 
 	Vector4 GetP0() const;
-	//Vector4 GetP1() const;
+	Vector4 GetP1() const;
 	Vector4 GetNormal() const;
 	
 protected:

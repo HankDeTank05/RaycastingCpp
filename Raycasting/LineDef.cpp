@@ -26,6 +26,11 @@ Vector4 LineDef::GetP0() const
 	return p0;
 }
 
+Vector4 LineDef::GetP1() const
+{
+	return p1;
+}
+
 Vector4 LineDef::GetNormal() const
 {
 	return normal;

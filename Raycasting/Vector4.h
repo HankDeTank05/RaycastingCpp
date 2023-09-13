@@ -17,6 +17,9 @@ public: // vector math
 	float magSqr() const;
 	float dot(const Vector4& other) const;
 	Vector4 cross(const Vector4& other) const;
+	Vector4 getNorm() const;
+
+	void normalize();
 
 public: // operators
 	Vector4 operator+(const Vector4& other);

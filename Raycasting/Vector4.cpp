@@ -82,6 +82,17 @@ Vector4 Vector4::cross(const Vector4& other) const
 		0.0f);
 }
 
+Vector4 Vector4::getNorm() const
+{
+	float mag = this->mag();
+	return Vector4(x / mag, y / mag, z / mag, w);
+}
+
+void Vector4::normalize()
+{
+	*this = this->getNorm();
+}
+
 Vector4 Vector4::operator+(const Vector4& other)
 {
 	// p = point = (?, ?, ?, 1.0f)
