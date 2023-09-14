@@ -23,11 +23,10 @@ public:
 	virtual bool OnUserUpdate(float fElapsedTime) override;
 
 private: // internal helper functions
-	int BinSearchForX(float angle);
-	int BinSearchForX(float angle, int left, int right);
+	int BruteForceSearchForX(float dotProduct, bool leftSideOfScreen);
 
 private:
-	std::array<float, SCREEN_WIDTH> angleToX;
+	std::array<float, SCREEN_WIDTH / 2 + 1> angleToX;
 	SectorMap worldMap;
 	Vector4 pos;
 	Vector4 dir;

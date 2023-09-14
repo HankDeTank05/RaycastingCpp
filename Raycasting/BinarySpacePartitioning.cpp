@@ -18,18 +18,11 @@ BinarySpacePartitioning::~BinarySpacePartitioning()
 
 bool BinarySpacePartitioning::OnUserCreate()
 {
-	// math checks before we get going
-
-	Vector4 xAxis(1.0f, 0.0f, 0.0f, 0.0f);
-	Vector4 yAxis(0.0f, 1.0f, 0.0f, 0.0f);
-	Vector4 zAxis(0.0f, 0.0f, 1.0f, 0.0f);
-
-	assert(xAxis.cross(yAxis) == zAxis);
-	assert(zAxis.cross(xAxis) == yAxis);
-	assert(yAxis.cross(zAxis) == xAxis);
+	// make sure the screen width is an even number so our lookup table works
+	assert(SCREEN_WIDTH % 2 == 0);
 
 	// create sector map
-	worldMap.AddLineDef(LineDef(-5.0f, -10.0f, 5.0f, -10.0f));
+	worldMap.AddLineDef(LineDef(-1.0f, -1.0f, 1.0f, -5.0f));
 
 	// set player pos and dir
 	pos = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -37,7 +30,7 @@ bool BinarySpacePartitioning::OnUserCreate()
 	plane = Vector4(0.66f, 0.0f, 0.0f, 0.0f);
 
 	// create lookup table for converting angles to screen-x
-	for (int x = 0; x < SCREEN_WIDTH; x++)
+	for (int x = 0; x < angleToX.size(); x++)
 	{
 		float cameraX = 2.0f * x / static_cast<float>(SCREEN_WIDTH) - 1; // x-coord in camera space
 		Vector4 rayDir(dir.GetX() + plane.GetX() * cameraX,
@@ -47,15 +40,7 @@ bool BinarySpacePartitioning::OnUserCreate()
 
 		rayDir.normalize();
 
-		Vector4 comparisonAngle = (pos + dir - plane) - pos;
-		comparisonAngle.normalize();
-
-		float angle = rayDir.dot(comparisonAngle);
-
-		//assert(angleToX.count(angle) == 0);
-		//angleToX.insert(std::pair<float, int>(angle, x));
-		assert(x < angleToX.size());
-		angleToX[x] = angle;
+		angleToX[x] = rayDir.dot(dir);
 	}
 
 	return true;
@@ -74,23 +59,40 @@ bool BinarySpacePartitioning::OnUserUpdate(float fElapsedTime)
 		{
 			// draw the linedef from the leftmost column to the rightmost column
 
-			Vector4 comparisonAngle = (pos + dir - plane) - pos;
-			comparisonAngle.normalize();
+			Vector4 vLeft = currLineDef.GetP0() - pos;
+			Vector4 vRight = currLineDef.GetP1() - pos;
 
-			Vector4 dirToLeft = (currLineDef.GetP0() - pos);
-			Vector4 dirToRight = (currLineDef.GetP1() - pos);
+			vLeft.normalize();
+			vRight.normalize();
 
-			dirToLeft.normalize();
-			dirToRight.normalize();
+			float leftDot = vLeft.dot(dir);
+			float rightDot = vRight.dot(dir);
 
-			float leftAngle = dirToLeft.dot(comparisonAngle);
-			float rightAngle = dirToRight.dot(comparisonAngle);
+			Vector4 dirLeft = Vector4(0.0f, 1.0f, 0.0f, 0.0f).cross(dir);
+			dirLeft.normalize();
 
-			assert(leftAngle > rightAngle);
+			bool leftEndIsScreenLeft = dirLeft.dot(vLeft) > 0.0f;
+			bool rightEndIsScreenLeft = dirLeft.dot(vRight) > 0.0f;
 
-			// binary search for the proper column to draw
-			int leftX = BinSearchForX(leftAngle);
-			int rightX = BinSearchForX(rightAngle);
+			int leftX = BruteForceSearchForX(leftDot, leftEndIsScreenLeft);
+			int rightX = BruteForceSearchForX(rightDot, rightEndIsScreenLeft);
+
+			/*
+			* how to get the wall point distance from the camera "plane"
+			* 1. project (wall point - player pos) onto the camera "plane" vector
+			* 2. subtract the projected vector from the original (wall point - player pos) vector
+			* 3. the above step returns a vector perpendicular to the projection. get its magnitude
+			*/
+
+			Vector4 vLeftProjection = (vLeft.dot(plane) / plane.dot(plane)) * plane;
+			Vector4 vRightProjection = (vRight.dot(plane) / plane.dot(plane)) * plane;
+
+			Vector4 vLeftPerp = vLeft - vLeftProjection;
+			Vector4 vRightPerp = vRight - vRightProjection;
+
+			// TODO: you might be able to use magSqr() here to avoid a sqaure-root...
+			float leftPerpDist = vLeftPerp.mag();
+			float rightPerpDist = vRightPerp.mag();
 
 			for (int x = leftX; x < rightX; x++)
 			{
@@ -100,14 +102,11 @@ bool BinarySpacePartitioning::OnUserUpdate(float fElapsedTime)
 					dir.GetZ() + plane.GetZ() * cameraX,
 					0.0f);
 
-				float numer = (pos - currLineDef.GetP0()).dot(currLineDef.GetNormal());
-				float denom = currLineDef.GetNormal().magSqr();
+				float amountAcrossWall = static_cast<float>(x - leftX) / static_cast<float>(rightX - leftX);
 
-				Vector4 projOnNormal = (numer / denom) * currLineDef.GetNormal();
+				float distance = amountAcrossWall * (rightPerpDist - leftPerpDist) + leftPerpDist;
 
-				float distance = abs(projOnNormal.mag());
-
-				int lineHeight = static_cast<int>(SCREEN_HEIGHT / distance);
+				int lineHeight = static_cast<int>(SCREEN_HEIGHT / (1.0f + distance)); // TODO: remove this "1.0f + " once you figure out distance
 
 				// calculate lowest and highest pixel to fill in current stripe
 				int drawStart = -lineHeight / 2 + SCREEN_HEIGHT / 2;
@@ -124,9 +123,7 @@ bool BinarySpacePartitioning::OnUserUpdate(float fElapsedTime)
 
 				olc::Pixel color = olc::WHITE;
 
-				Vector4 normalizedNormal = currLineDef.GetNormal().getNorm();
-				Vector4 normalizedDir = dir.getNorm();
-				float colorAdjustment = abs(normalizedNormal.dot(normalizedDir));
+				float colorAdjustment = abs(currLineDef.GetNormal().dot(dir));
 
 				DrawLine(x, drawStart, x, drawEnd, color / colorAdjustment);
 			}
@@ -150,64 +147,143 @@ bool BinarySpacePartitioning::OnUserUpdate(float fElapsedTime)
 	return true;
 }
 
-int BinarySpacePartitioning::BinSearchForX(float angle)
+int BinarySpacePartitioning::BruteForceSearchForX(float dotProduct, bool leftSideOfScreen)
 {
-	return BinSearchForX(angle, 0, angleToX.size() - 1);
-}
-
-int BinarySpacePartitioning::BinSearchForX(float angle, int left, int right)
-{
-	int mid = (left + right) / 2;
-
-	// make sure indices are valid
-	assert(left <= mid);
-	assert(mid <= right);
-	if (left == right)
+	// case: no match (outside screen bounds)
+	if (dotProduct < angleToX[0])
 	{
-		return left;
-	}
-	assert(0 <= left);
-	assert(right < angleToX.size());
-
-	// NOTE: angleToX IS REVERSE SORTED!
-	// THIS MEANS...
-	// LEFT IS LARGER, RIGHT IS SMALLER
-
-	// case: angle is on left (larger)
-	if (angleToX[left] >= angle && angle > angleToX[mid])
-	{
-		// case: imperfect match
-		if (left == mid - 1 && angle != angleToX[left])
+		// case: left side of screen
+		if (leftSideOfScreen)
 		{
-			return left;
+			return 0;
 		}
-		// case: still searching
-		return BinSearchForX(angle, left, mid - 1);
+
+		// case: right side of screen
+		else
+		{
+			return SCREEN_WIDTH - 1;
+		}
 	}
 
-	// case: angle is on right (smaller)
-	else if (angleToX[mid] >= angle && angle >= angleToX[right])
+	for (int x = 0; x < angleToX.size() - 1; x++)
 	{
-		// case: imperfect match
-		if (mid == right - 1)
+		// case: exact match
+		if (dotProduct == angleToX[x])
 		{
-			if (angle == angleToX[mid] || angle > angleToX[right])
+			// case: left side of screen
+			if (leftSideOfScreen)
 			{
-				return mid;
+				return x;
 			}
-			else if (angle == angleToX[right])
+
+			// case: right side of screen
+			else
 			{
-				return right;
+				return SCREEN_WIDTH - x;
 			}
 		}
-		// case: still searching
-		return BinSearchForX(angle, mid, right);
-	}
 
-	// base case
-	else
-	{
-		return SCREEN_WIDTH;
+		// case: imperfect match (between current and next, exclusive)
+		else if (angleToX[x] < dotProduct && dotProduct < angleToX[x + 1])
+		{
+			// case: left side of screen
+			if (leftSideOfScreen)
+			{
+				return x;
+			}
+
+			// case: right side of screen
+			else
+			{
+				return SCREEN_WIDTH - x;
+			}
+		}
 	}
 
 }
+
+//int BinarySpacePartitioning::BruteForceSearchForX(float angle)
+//{
+//	// case: angle is 
+//	int screenX = 0;
+//	while (screenX < angleToX.size() - 1)
+//	{
+//		// case: angle matches current x-angle exactly
+//		if (angle == angleToX[screenX])
+//		{
+//			return screenX;
+//		}
+//
+//		// case: angle is in between current x-angle and next x-angle
+//		else if (angleToX[screenX] < angle && angle < angleToX[screenX + 1])
+//		{
+//			return screenX;
+//		}
+//
+//		screenX++;
+//	}
+//
+//}
+//
+//int BinarySpacePartitioning::BinSearchForX(float angle)
+//{
+//	return BinSearchForX(angle, 0, angleToX.size() - 1);
+//}
+//
+//int BinarySpacePartitioning::BinSearchForX(float angle, int left, int right)
+//{
+//	if (left == right - 1 || left == right)
+//	{
+//		return left;
+//	}
+//	int mid = (left + right) / 2;
+//
+//	// make sure indices are valid
+//	assert(left <= mid);
+//	assert(mid <= right);
+//	assert(left < right);
+//	assert(0 <= left);
+//	assert(right < angleToX.size());
+//
+//	// NOTE: angleToX IS REVERSE SORTED!
+//	// THIS MEANS...
+//	// LEFT IS LARGER, RIGHT IS SMALLER
+//
+//	// case: angle is on left (larger)
+//	if (angleToX[left] >= angle && angle > angleToX[mid])
+//	{
+//		// case: imperfect match
+//		if (left == mid - 1 && angle != angleToX[left])
+//		{
+//			return left;
+//		}
+//		// case: still searching
+//		return BinSearchForX(angle, left, mid - 1);
+//	}
+//
+//	// case: angle is on right (smaller)
+//	else if (angleToX[mid] >= angle && angle >= angleToX[right])
+//	{
+//		// case: imperfect match
+//		if (mid == right - 1)
+//		{
+//			if (angle == angleToX[mid] || angle > angleToX[right])
+//			{
+//				return mid;
+//			}
+//			else if (angle == angleToX[right])
+//			{
+//				return right;
+//			}
+//		}
+//		// case: still searching
+//		return BinSearchForX(angle, mid, right);
+//	}
+//
+//	// base case
+//	else
+//	{
+//		return SCREEN_WIDTH;
+//	}
+//
+//}

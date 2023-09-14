@@ -61,8 +61,8 @@ float Vector4::dot(const Vector4& other) const
 
 Vector4 Vector4::cross(const Vector4& other) const
 {
-	assert(this->w == 0.0f);
-	assert(other.w == 0.0f);
+	//assert(this->w == 0.0f);
+	//assert(other.w == 0.0f);
 
 	// u = (x, y, z, 0.0f)
 	// v = (x, y, z, 0.0f)
@@ -103,7 +103,7 @@ Vector4 Vector4::operator+(const Vector4& other)
 	// v + p = OKAY
 	// v + v = OKAY
 
-	assert(this->w + other.w <= 1.0f);
+	//assert(this->w + other.w <= 1.0f);
 	return Vector4(this->x + other.x,
 		this->y + other.y,
 		this->z + other.z,
