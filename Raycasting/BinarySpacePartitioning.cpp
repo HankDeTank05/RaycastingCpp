@@ -22,7 +22,7 @@ bool BinarySpacePartitioning::OnUserCreate()
 	assert(SCREEN_WIDTH % 2 == 0);
 
 	// create sector map
-	worldMap.AddLineDef(LineDef(-1.0f, -1.0f, 1.0f, -5.0f));
+	worldMap.AddLineDef(LineDef(-2.0f, -1.0f, 2.0f, -5.0f));
 
 	// set player pos and dir
 	pos = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -62,17 +62,17 @@ bool BinarySpacePartitioning::OnUserUpdate(float fElapsedTime)
 			Vector4 vLeft = currLineDef.GetP0() - pos;
 			Vector4 vRight = currLineDef.GetP1() - pos;
 
-			vLeft.normalize();
-			vRight.normalize();
+			//vLeft.normalize();
+			//vRight.normalize();
 
-			float leftDot = vLeft.dot(dir);
-			float rightDot = vRight.dot(dir);
+			float leftDot = vLeft.getNorm().dot(dir);
+			float rightDot = vRight.getNorm().dot(dir);
 
 			Vector4 dirLeft = Vector4(0.0f, 1.0f, 0.0f, 0.0f).cross(dir);
 			dirLeft.normalize();
 
-			bool leftEndIsScreenLeft = dirLeft.dot(vLeft) > 0.0f;
-			bool rightEndIsScreenLeft = dirLeft.dot(vRight) > 0.0f;
+			bool leftEndIsScreenLeft = dirLeft.dot(vLeft.getNorm()) > 0.0f;
+			bool rightEndIsScreenLeft = dirLeft.dot(vRight.getNorm()) > 0.0f;
 
 			int leftX = BruteForceSearchForX(leftDot, leftEndIsScreenLeft);
 			int rightX = BruteForceSearchForX(rightDot, rightEndIsScreenLeft);
@@ -102,11 +102,21 @@ bool BinarySpacePartitioning::OnUserUpdate(float fElapsedTime)
 					dir.GetZ() + plane.GetZ() * cameraX,
 					0.0f);
 
+				float perpWallDist;
+
+				/* 
+				// the following was my attempt to interpolate between the left dist and right dist, but
+				// resulted in a fisheye-like effect, so we gotta do it the hard way...
+
 				float amountAcrossWall = static_cast<float>(x - leftX) / static_cast<float>(rightX - leftX);
+				perpWallDist = amountAcrossWall * (rightPerpDist - leftPerpDist) + leftPerpDist;
+				//*/
 
-				float distance = amountAcrossWall * (rightPerpDist - leftPerpDist) + leftPerpDist;
+				//*
+				float a = rayDir.dot(currLineDef.GetP1() - currLineDef.GetP0());
+				//*/
 
-				int lineHeight = static_cast<int>(SCREEN_HEIGHT / (1.0f + distance)); // TODO: remove this "1.0f + " once you figure out distance
+				int lineHeight = static_cast<int>(SCREEN_HEIGHT / perpWallDist); 
 
 				// calculate lowest and highest pixel to fill in current stripe
 				int drawStart = -lineHeight / 2 + SCREEN_HEIGHT / 2;
