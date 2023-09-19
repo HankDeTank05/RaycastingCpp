@@ -31,6 +31,7 @@ bool Raycasting::OnUserCreate()
 
 	for (int x = 0; x < SCREEN_WIDTH; x++)
 	{
+		cameraX[x] = 2.0f * x / static_cast<float>(SCREEN_WIDTH) - 1; // the x-coord in camera space
 		zbuff[x] = 100.0f;
 	}
 
@@ -95,7 +96,7 @@ bool Raycasting::OnUserUpdate(float fElapsedTime)
 {
 	// called once per frame
 
-	//Clear(olc::BLACK);
+	Clear(olc::WHITE);
 
 	//// auto-adjust resolution based on framerate
 	//if (fElapsedTime > TARGET_FRAME_TIME)
@@ -107,11 +108,14 @@ bool Raycasting::OnUserUpdate(float fElapsedTime)
 	//	pixelSize--;
 	//}
 
+	for (int x = 0; x < SCREEN_WIDTH; x++)
+	{
+		zbuff[x] = 100.0f;
+	}
+
 	TexturedRaycasting();
 
 	SmartFloorcasting();
-
-	DrawSprite(0, 0, &buffer);
 
 	MovePlayer(fElapsedTime);
 
@@ -190,12 +194,11 @@ void Raycasting::TexturedRaycasting()
 	// TEXTURED RAYCASTING (WALLS) //
 	/////////////////////////////////
 
-	for (int x = 0; x < SCREEN_WIDTH; x += pixelSize)
+	for (int x = 0; x < SCREEN_WIDTH; x++)
 	{
 		// calculate ray pos and dir
-		float cameraX = 2.0f * x / static_cast<float>(SCREEN_WIDTH) - 1; // the x-coord in camera space
-		Vector3 rayDir(player.GetDir().GetX() + player.GetPlane().GetX() * cameraX,
-						player.GetDir().GetY() + player.GetPlane().GetY() * cameraX,
+		Vector3 rayDir(player.GetDir().GetX() + player.GetPlane().GetX() * cameraX[x],
+						player.GetDir().GetY() + player.GetPlane().GetY() * cameraX[x],
 						0.0f);
 
 		// which box of the map we're in
@@ -333,7 +336,7 @@ void Raycasting::TexturedRaycasting()
 
 		// starting texture coordinate
 		float texPos = (drawStart - SCREEN_HEIGHT / 2.0f + lineHeight / 2.0f) * step;
-		for (int y = drawStart; y < drawEnd; y += pixelSize)
+		for (int y = drawStart; y < drawEnd; y++)
 		{
 			// cast the texture coordinate to integer and mask it with (TEX_HEIGHT - 1) in case of overflow
 			int texY = static_cast<int>(texPos) & (TEX_HEIGHT - 1);
@@ -351,8 +354,8 @@ void Raycasting::TexturedRaycasting()
 				color = darkenedTexture[texNum][texX][texY];
 			}
 
-			//Draw(x, y, color);
-			buffer.SetPixel(x, y, color);
+			Draw(x, y, color);
+			//buffer.SetPixel(x, y, color);
 		}
 
 		/*
@@ -493,13 +496,15 @@ void Raycasting::SmartFloorcasting()
 					color = darkenedTexture[pOpenCell->GetFloorTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
 					//color = color / 2; // make a bit darker
 					//Draw(x, y, color);
-					buffer.SetPixel(x, y, color);
+					Draw(x, y, color);
+					//buffer.SetPixel(x, y, color);
 
 					// ceiling (symmetrical, at SCREEN_HEIGHT - y - 1 instead of y)
 					color = darkenedTexture[pOpenCell->GetCeilingTexIndex() - 1][tx][ty]; // TODO: fix so you don't have to do -1 at runtime
 					//color = color / 2; // make a bit darker
 					//Draw(x, SCREEN_HEIGHT - y - 1, color);
-					buffer.SetPixel(x, SCREEN_HEIGHT - y - 1, color);
+					Draw(x, SCREEN_HEIGHT - y - 1, color);
+					//buffer.SetPixel(x, SCREEN_HEIGHT - y - 1, color);
 				}
 			}
 

@@ -5,11 +5,11 @@
 
 int main()
 {
-	/*
+	//*
 	Raycasting game;
 	//*/
 
-	//*
+	/*
 	BinarySpacePartitioning game;
 	//*/
 
