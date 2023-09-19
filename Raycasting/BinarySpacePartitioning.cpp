@@ -113,10 +113,29 @@ bool BinarySpacePartitioning::OnUserUpdate(float fElapsedTime)
 				//*/
 
 				//*
-				float a = rayDir.dot(currLineDef.GetP1() - currLineDef.GetP0());
+				Vector4 lineDefVect = currLineDef.GetP1() - currLineDef.GetP0();
+				// p1 = pos
+				// v1 = rayDir
+				// p2 = currLineDef.GetP0()
+				// v2 = lineDefVect
+				float a = rayDir.dot(rayDir);
+				float b = rayDir.dot(lineDefVect);
+				float c = lineDefVect.dot(lineDefVect);
+				float d = (pos - currLineDef.GetP0()).dot(rayDir);
+				float e = (pos - currLineDef.GetP0()).dot(lineDefVect);
+				assert(b * b - a * c != 0.0f);
+				float t1 = (c * d - b * e) / (b * b - a * c);
+				float t2 = (d * b - a * e) / (b * b - a * c);
+				Vector4 c1 = pos + t1 * rayDir;
+				Vector4 c2 = currLineDef.GetP0() + t2 * lineDefVect;
+				//assert(c1 == c2);
+				Vector4 toProject = c1 - pos;
+				Vector4 projected = (toProject.dot(plane) / plane.dot(plane)) * plane;
+				Vector4 perpendicular = toProject - projected;
+				perpWallDist = perpendicular.mag();
 				//*/
 
-				int lineHeight = static_cast<int>(SCREEN_HEIGHT / perpWallDist); 
+				int lineHeight = static_cast<int>(SCREEN_HEIGHT / perpWallDist);
 
 				// calculate lowest and highest pixel to fill in current stripe
 				int drawStart = -lineHeight / 2 + SCREEN_HEIGHT / 2;
