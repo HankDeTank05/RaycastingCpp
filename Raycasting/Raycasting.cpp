@@ -96,7 +96,7 @@ bool Raycasting::OnUserUpdate(float fElapsedTime)
 {
 	// called once per frame
 
-	Clear(olc::WHITE);
+	Clear(olc::BLACK);
 
 	//// auto-adjust resolution based on framerate
 	//if (fElapsedTime > TARGET_FRAME_TIME)
@@ -354,7 +354,7 @@ void Raycasting::TexturedRaycasting()
 				color = darkenedTexture[texNum][texX][texY];
 			}
 
-			Draw(x, y, color);
+			//Draw(x, y, color);
 			//buffer.SetPixel(x, y, color);
 		}
 
